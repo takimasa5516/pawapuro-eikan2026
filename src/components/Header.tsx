@@ -8,10 +8,12 @@ import {
   ShieldAlert, 
   Trophy, 
   Moon, 
-  Sun 
+  Sun,
+  MapPin
 } from 'lucide-react';
 
 export type TabType = 
+  | 'regionSelect'
   | 'scout' 
   | 'personality' 
   | 'evaluation' 
@@ -34,7 +36,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleDarkMode
 }) => {
   const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
-    { id: 'scout', label: 'スカウト＆リセマラ', icon: <Users className="w-4 h-4" /> },
+    { id: 'regionSelect', label: '開始地域選択(★別)', icon: <MapPin className="w-4 h-4" /> },
+    { id: 'scout', label: '転生スカウト＆選手DB', icon: <Users className="w-4 h-4" /> },
     { id: 'personality', label: '性格・戦術・伝令', icon: <Sparkles className="w-4 h-4" /> },
     { id: 'evaluation', label: 'スカウト寸評逆引き', icon: <Search className="w-4 h-4" /> },
     { id: 'calendar', label: '月別イベント', icon: <Calendar className="w-4 h-4" /> },

@@ -1,5 +1,6 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header, TabType } from './components/Header';
+import { RegionSelectTab } from './components/RegionSelectTab';
 import { ScoutTab } from './components/ScoutTab';
 import { PersonalityTab } from './components/PersonalityTab';
 import { EvaluationTab } from './components/EvaluationTab';
@@ -9,7 +10,7 @@ import { RedAbilityTab } from './components/RedAbilityTab';
 import { WorldCupManagerTab } from './components/WorldCupManagerTab';
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState<TabType>('scout');
+  const [currentTab, setCurrentTab] = useState<TabType>('regionSelect');
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('pawapuro_eikan_dark');
@@ -41,6 +42,7 @@ export function App() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {currentTab === 'regionSelect' && <RegionSelectTab />}
         {currentTab === 'scout' && <ScoutTab />}
         {currentTab === 'personality' && <PersonalityTab />}
         {currentTab === 'evaluation' && <EvaluationTab />}
