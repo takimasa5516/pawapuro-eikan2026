@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { 
   Users, 
   Sparkles, 
@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'evaluation', label: 'スカウト寸評逆引き', icon: <Search className="w-4 h-4" /> },
     { id: 'calendar', label: '月別イベント', icon: <Calendar className="w-4 h-4" /> },
     { id: 'training', label: '練習・合宿・戦術', icon: <Dumbbell className="w-4 h-4" /> },
-    { id: 'redAbility', label: '赤特打消し相関', icon: <ShieldAlert className="w-4 h-4" /> },
+    { id: 'redAbility', label: '特殊能力・赤特打消し', icon: <ShieldAlert className="w-4 h-4" /> },
     { id: 'worldCup', label: '世界大会・マネージャー', icon: <Trophy className="w-4 h-4" /> },
   ];
 

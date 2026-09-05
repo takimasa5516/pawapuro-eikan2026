@@ -1,105 +1,362 @@
-﻿export interface RedAbilityCorrelation {
+export interface RedAbilityCorrelation {
   id: number;
   redName: string;
   blueName: string;
-  specialGuide: boolean; // 特別指導
-  match: boolean;        // 試合
-  book: boolean;         // 本
-  camp: boolean;         // 合宿
+  goldName?: string;     // 上位金特
+  category: '投手' | '野手' | '捕手' | '共通';
+  specialGuide: boolean; // 特別指導で消去可能か
+  match: boolean;        // 試合で消去可能か
+  book: boolean;         // 本で消去可能か
+  camp: boolean;         // 合宿で消去可能か
   description: string;
   note?: string;
+  dangerLevel: '最凶' | '要注意' | '警戒' | '低';
 }
 
 export const RED_ABILITIES_DATA: RedAbilityCorrelation[] = [
   {
     id: 1,
-    redName: '軽い球',
-    blueName: '重い球',
+    redName: 'ムード×',
+    blueName: 'ムード○',
+    goldName: '精神的支柱',
+    category: '共通',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '打球が飛ばされやすくなる赤特。重い球を取得することで上書き消去可能。'
+    description: 'ベンチにいるだけでも味方全員のミート・パワーが下がる最悪の赤特。',
+    note: '全特殊能力の中で最も被害が大きい。特別指導マス（6月・9月）等で最優先で即消去してください。'
   },
   {
     id: 2,
     redName: '一発',
     blueName: '逃げ球',
+    goldName: '本塁打厳禁',
+    category: '投手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '失投時に本塁打を浴びやすくなる危険な赤特。逃げ球で打ち消し。'
+    description: '失投時に真ん中にボールが集まり、被本塁打（一発被弾）を浴びやすくなる。',
+    note: '栄冠ナインの投手の事故敗戦ナンバーワン要因。「逃げ球」で確実に上書き消去しましょう。'
   },
   {
     id: 3,
-    redName: '負け運',
-    blueName: '勝ち運',
+    redName: '軽い球',
+    blueName: '重い球',
+    goldName: '怪物球威',
+    category: '投手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '登板中に味方打線のパワーが下がる赤特。勝ち運で打ち消し。'
+    description: '打球が異常に伸びてフェンスオーバーされやすくなる。',
+    note: '球速が高くてもスタンドに運ばれる危険性大。「重い球」の取得で上書き消去可能。'
   },
   {
     id: 4,
-    redName: 'スロースターター',
-    blueName: '立ち上がり○',
+    redName: '負け運',
+    blueName: '勝ち運',
+    goldName: '勝利の星',
+    category: '投手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '序盤（1〜2回）に失点しやすくなる。立ち上がり○で上書き可能。'
+    description: '登板中、味方打線全体のパワーが下がり得点力が劇的に落ちる。',
+    note: '投手が好投しても0-1で競り負ける典型例。「勝ち運」で上書き消去できます。'
   },
   {
     id: 5,
-    redName: '対ランナー×',
-    blueName: '対ランナー○',
+    redName: '送球× (E〜G)',
+    blueName: '送球○/◎',
+    goldName: 'ストライク送球',
+    category: '野手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '走者を背負うと能力低下。対ランナー○を取得して解消。'
+    description: '送球コントロールが大きく乱れ、悪送球エラーを連発する。',
+    note: '特に捕手や二塁・遊撃手にあると致命的。特別指導の「守備」で最優先消去推奨。'
   },
   {
     id: 6,
-    redName: 'ボール先行',
-    blueName: 'ストライク先行',
+    redName: 'キャッチャー× (E〜G)',
+    blueName: 'キャッチャー○/B/A',
+    goldName: '球界の頭脳',
+    category: '捕手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: 'カウントが悪化しやすい。ストライク先行で打ち消し可能。'
+    description: '投手のコントロールが著しく低下し、消費スタミナが激増する。',
+    note: 'この捕手がマスクを被ると投手陣が壊滅します。特能の本等で直ちに消去・上書き必須。'
   },
   {
     id: 7,
-    redName: '三振',
-    blueName: '粘り打ち',
+    redName: 'エラー',
+    blueName: '守備職人',
+    goldName: '魔術師',
+    category: '野手',
+    dangerLevel: '最凶',
     specialGuide: true,
     match: true,
     book: true,
     camp: true,
-    description: '2ストライク追い込まれるとミートが低下。粘り打ちで打ち消し。'
+    description: '重要な局面やイージーゴロ・フライでファンブルや落球を犯す。',
+    note: '9回裏のサヨナラ負けエラーに直結。捕球特訓や守備職人の取得で解消。'
   },
   {
     id: 8,
+    redName: '寸前×',
+    blueName: '尻上がり',
+    goldName: '終盤の鬼',
+    category: '投手',
+    dangerLevel: '最凶',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '5回や9回など、勝利目前のイニングで急激に能力が落ちて連打を浴びる。',
+    note: '9回2アウトから大逆転される悲劇の元凶。「尻上がり」で解消可能です。'
+  },
+  {
+    id: 9,
+    redName: '四球',
+    blueName: 'コントロール特訓',
+    goldName: '精密機械',
+    category: '投手',
+    dangerLevel: '最凶',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: 'カウント3ボールになるとコントロールが急激に悪化し押し出し四球等を連発。',
+    note: '自滅炎上の引き金。制球練習と特訓で早期消去が望ましいです。'
+  },
+  {
+    id: 10,
+    redName: 'スロースターター',
+    blueName: '立ち上がり○',
+    goldName: '快速立ち上がり',
+    category: '投手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '序盤（1〜2回）に失点しやすくなる。',
+    note: '「立ち上がり○」を取得することで上書き消去可能です。'
+  },
+  {
+    id: 11,
+    redName: '対ピンチ× (E〜G)',
+    blueName: '対ピンチ○/◎',
+    goldName: '強心臓',
+    category: '投手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '得点圏に走者を背負うと球速・変化量・制球が低下する。',
+    note: '特別指導の「投手」や特能の本で対ピンチ○/◎へ引き上げ消去。'
+  },
+  {
+    id: 12,
+    redName: 'チャンス× (E〜G)',
+    blueName: 'チャンス○/◎',
+    goldName: '勝負師',
+    category: '野手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '得点圏に走者がいる時、ミート・パワーが落ちて凡退しやすくなる。',
+    note: '特別指導の「打撃」や合宿でチャンス○/◎を取得して上書き消去。'
+  },
+  {
+    id: 13,
+    redName: '三振',
+    blueName: '粘り打ち',
+    goldName: '悪球打ち',
+    category: '野手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '2ストライク追い込まれるとミートカーソルが縮小し三振が増える。',
+    note: '「粘り打ち」を取得することで完全に打ち消し可能。'
+  },
+  {
+    id: 14,
+    redName: '打たれ強さ× (E〜G)',
+    blueName: '打たれ強さ○/◎',
+    goldName: '不屈の魂',
+    category: '投手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '連打を浴びると動揺（ピヨリ状態）になりスタミナが激しく削られる。',
+    note: '特別指導の「投手」で打たれ強さ○を取得して消去。'
+  },
+  {
+    id: 15,
+    redName: '対ランナー×',
+    blueName: '対ランナー○',
+    category: '投手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '一塁走者や一三塁走者を背負うと能力が低下する。',
+    note: '「対ランナー○」を取得することで解消できます。'
+  },
+  {
+    id: 16,
+    redName: 'ボール先行',
+    blueName: 'ストライク先行',
+    category: '投手',
+    dangerLevel: '要注意',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: 'ボール球が先行しやすく、カウントを悪くして痛打されやすい。',
+    note: '「ストライク先行」を取得することで打ち消し可能。'
+  },
+  {
+    id: 17,
+    redName: '対左投手× (E〜G)',
+    blueName: '対左投手○/◎',
+    goldName: '左キラー',
+    category: '野手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '相手が左投手の時、ミート・パワーが低下する。',
+    note: '特別指導「打撃」や本で対左投手○/◎へ強化して消去。'
+  },
+  {
+    id: 18,
+    redName: '対左打者× (E〜G)',
+    blueName: '対左打者○/◎',
+    goldName: '左キラー',
+    category: '投手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '左打者と対峙した際、球速・制球・変化量が低下する。',
+    note: '特別指導「投手」や本で対左打者○/◎へ引き上げ。'
+  },
+  {
+    id: 19,
+    redName: 'ノビ× (E〜G)',
+    blueName: 'ノビ○/◎',
+    goldName: '怪童',
+    category: '投手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '直球のノビ・体感速度が落ち、打者に捉えられやすくなる。',
+    note: '特別指導「投手」やノビ○/◎で打ち消し可能。'
+  },
+  {
+    id: 20,
+    redName: 'クイック× (E〜G)',
+    blueName: 'クイック○/◎',
+    category: '投手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '投球モーションが遅く、相手に楽々と盗塁を決められてしまう。',
+    note: '特別指導「守備」等でクイック○/◎に昇格消去。'
+  },
+  {
+    id: 21,
+    redName: '併殺',
+    blueName: 'アベレージヒッター等',
+    category: '野手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '一塁走者がいる場面でゴロを打つとダブルプレー（併殺打）になりやすい。',
+    note: 'チャンスを断ち切る赤特。安打製造系特能で単打・長打率を上げて克服。'
+  },
+  {
+    id: 22,
+    redName: '盗塁× (E〜G)',
+    blueName: '盗塁○/◎',
+    goldName: '電光石火',
+    category: '野手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '盗塁時のスタートが極端に悪く、盗塁刺殺される確率が高い。',
+    note: '特別指導「走塁」で盗塁○へ改善可能。'
+  },
+  {
+    id: 23,
+    redName: '走塁× (E〜G)',
+    blueName: '走塁○/◎',
+    goldName: '高速ベースラン',
+    category: '野手',
+    dangerLevel: '警戒',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: 'ベースランニングで減速し、好走塁や進塁ができない。',
+    note: '特別指導「走塁」で走塁○へ改善可能。'
+  },
+  {
+    id: 24,
+    redName: 'ケガしにくさ× (E〜G)',
+    blueName: 'ケガしにくさ○/◎',
+    goldName: '鉄人',
+    category: '共通',
+    dangerLevel: '低',
+    specialGuide: true,
+    match: true,
+    book: true,
+    camp: true,
+    description: '練習や試合で怪我（捻挫・骨折等）を起こしやすくなる。',
+    note: '特別指導や特訓でケガしにくさ○/◎に改善可能。'
+  },
+  {
+    id: 25,
     redName: 'チームプレイ×',
     blueName: 'チームプレイ○',
+    category: '野手',
+    dangerLevel: '低',
     specialGuide: false,
     match: true,
     book: true,
     camp: true,
-    description: '※特別指導では消去不可！合宿・試合・本で対応可能。',
-    note: '自動操作中にバントをしづらくなる効果があるため、強打者やクリーンナップならそのままでも影響が少なく実質メリットになることもあります。'
-  },
-  {
-    id: 9,
-    redName: 'ムード×',
-    blueName: 'ムード○',
-    specialGuide: true,
-    match: true,
-    book: true,
-    camp: true,
-    description: '試合中、チーム全体の打撃能力を下げてしまう最悪の赤特。最優先で消去必須。'
+    description: '※特別指導では消去不可！合宿・試合・特能本でのみ対応可能。',
+    note: '自動操作中にバントをしづらくなる効果があるため、4番打者などクリーンナップなら消さずに残しても実質メリットになります！'
   }
 ];
