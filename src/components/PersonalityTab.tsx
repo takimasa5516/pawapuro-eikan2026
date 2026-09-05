@@ -1,6 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { PERSONALITIES_DATA, Personality } from '../data/personalities';
-import { Sparkles, Swords, Megaphone, Crown, TrendingUp, ChevronRight } from 'lucide-react';
+import { Sparkles, Swords, Megaphone, Crown, TrendingUp, ChevronRight, ShieldCheck, Clock, UserCheck } from 'lucide-react';
 
 export const PersonalityTab: React.FC = () => {
   const [selectedPersonality, setSelectedPersonality] = useState<Personality>(PERSONALITIES_DATA[0]);
@@ -15,7 +15,7 @@ export const PersonalityTab: React.FC = () => {
               <span>✨</span> 選手の性格別特徴・固有戦術・伝令・キャプテンまとめ
             </h2>
             <p className="text-xs sm:text-sm text-emerald-100 mt-1">
-              栄冠ナインの試合・育成を左右する性格システム完全攻略（ステータス成長補正・学年別戦術・伝令効果・キャプテンイベント）
+              栄冠ナインの試合・育成を左右する性格システム完全攻略（通常・上位固有戦術・守備伝令・キャプテンイベント）
             </p>
           </div>
           <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-xl border border-white/20 text-xs">
@@ -58,7 +58,7 @@ export const PersonalityTab: React.FC = () => {
                       )}
                     </div>
                     <p className={`text-xs mt-0.5 line-clamp-1 ${isSelected ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'}`}>
-                      伸び: {p.statGrowth.join(', ')}
+                      {p.statGrowth.join(', ')}
                     </p>
                   </div>
                   <ChevronRight className={`w-4 h-4 hidden sm:block ${isSelected ? 'text-white' : 'text-slate-400'}`} />
@@ -70,16 +70,16 @@ export const PersonalityTab: React.FC = () => {
           {/* Quick Summary Box */}
           <div className="bg-amber-50 dark:bg-amber-950/40 rounded-xl p-4 border border-amber-200 dark:border-amber-800/60 text-xs space-y-2 text-amber-900 dark:text-amber-200">
             <h4 className="font-bold flex items-center gap-1.5 text-amber-800 dark:text-amber-300">
-              <Sparkles className="w-4 h-4 text-amber-500" /> 性格選びの黄金ルール
+              <Sparkles className="w-4 h-4 text-amber-500" /> 固有戦術・伝令の鉄則
             </h4>
             <p>
-              ・<b>内気</b>：2・3年時に発動できる「魔物」はどんな名門相手でも逆転可能。スタメンに1〜2名は必ず確保。
+              ・<b>固有戦術</b>：1試合に1人1回使用可能。学年が上がると上位戦術（☆マーク）の出現率が大幅アップ！
             </p>
             <p>
-              ・<b>天才肌</b>：全ステータス急成長＆才能開花。エース投手や中軸打者に最適。
+              ・<b>守備時伝令</b>：1試合3回まで控え選手から指示。特にやんちゃ・熱血漢の「盛り上げる（全員の守備・捕球+40）」はピンチ脱出の救世主！
             </p>
             <p>
-              ・<b>キャプテン</b>：やんちゃ（グラウンドLv+1）、内気（学力UP）、お調子者（テンションUP）が特におすすめ！
+              ・<b>キャプテン</b>：やんちゃ（グラウンドLv+1）、内気（学力UP）、お調子者（テンションUP・超ノリノリ）が最優先！
             </p>
           </div>
         </div>
@@ -106,70 +106,122 @@ export const PersonalityTab: React.FC = () => {
               </p>
             </div>
 
-            {/* 1. 固有戦術（学年別） */}
+            {/* 1. 固有戦術（通常・上位＆学年別出現率） */}
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-3">
-                <Swords className="w-4 h-4 text-rose-500" /> 固有戦術（学年別）
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">1年生</span>
-                  <div className="font-extrabold text-sm text-slate-900 dark:text-slate-100 mt-1">
-                    {selectedPersonality.tactics.year1.name}
+              <div className="flex items-center justify-between mb-2.5">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <Swords className="w-4 h-4 text-rose-500" /> 固有戦術（試合中1人1回使用可能）
+                </h4>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                  {selectedPersonality.tactics.rateNote}
+                </span>
+              </div>
+
+              {/* Normal vs High Tactics Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* 通常戦術 */}
+                <div className="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                      通常戦術
+                    </span>
+                    <span className="text-xs font-semibold text-slate-400">1年次基本</span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                    {selectedPersonality.tactics.year1.desc}
+                  <div className="text-base font-black text-slate-900 dark:text-slate-100">
+                    {selectedPersonality.tactics.normal.name}
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {selectedPersonality.tactics.normal.desc}
                   </p>
+                  <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-[11px] space-y-1">
+                    <div><b className="text-blue-600 dark:text-blue-400">⚾ 打者時:</b> <span className="text-slate-700 dark:text-slate-300">{selectedPersonality.tactics.normal.batterEffect}</span></div>
+                    <div><b className="text-rose-600 dark:text-rose-400">🎯 投手時:</b> <span className="text-slate-700 dark:text-slate-300">{selectedPersonality.tactics.normal.pitcherEffect}</span></div>
+                  </div>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">2年生</span>
-                  <div className="font-extrabold text-sm text-slate-900 dark:text-slate-100 mt-1">
-                    {selectedPersonality.tactics.year2.name}
+
+                {/* 上位戦術 */}
+                <div className="bg-rose-50/50 dark:bg-rose-950/20 p-3.5 rounded-xl border border-rose-300 dark:border-rose-800/60 space-y-2 ring-1 ring-rose-400/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-rose-500 text-white flex items-center gap-1">
+                      <span>★</span> 上位戦術
+                    </span>
+                    <span className="text-xs font-bold text-rose-600 dark:text-rose-400">2・3年次高確率</span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                    {selectedPersonality.tactics.year2.desc}
+                  <div className="text-base font-black text-rose-700 dark:text-rose-300">
+                    {selectedPersonality.tactics.high.name}
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                    {selectedPersonality.tactics.high.desc}
                   </p>
+                  <div className="pt-2 border-t border-rose-200 dark:border-rose-900/60 text-[11px] space-y-1">
+                    <div><b className="text-blue-600 dark:text-blue-400">⚾ 打者時:</b> <span className="text-slate-800 dark:text-slate-200 font-semibold">{selectedPersonality.tactics.high.batterEffect}</span></div>
+                    <div><b className="text-rose-600 dark:text-rose-400">🎯 投手時:</b> <span className="text-slate-800 dark:text-slate-200 font-semibold">{selectedPersonality.tactics.high.pitcherEffect}</span></div>
+                  </div>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">3年生</span>
-                  <div className="font-extrabold text-sm text-slate-900 dark:text-slate-100 mt-1">
-                    {selectedPersonality.tactics.year3.name}
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                    {selectedPersonality.tactics.year3.desc}
-                  </p>
+              </div>
+
+              {/* 学年別抽選確率バー */}
+              <div className="mt-2.5 bg-slate-100 dark:bg-slate-900/40 p-2.5 rounded-xl flex flex-wrap items-center justify-between text-xs text-slate-600 dark:text-slate-400 gap-2 border border-slate-200 dark:border-slate-800">
+                <span className="font-bold text-slate-700 dark:text-slate-300">学年別発動戦術:</span>
+                <div className="flex items-center gap-3">
+                  <span>1年: <b className="text-slate-800 dark:text-slate-200">{selectedPersonality.tactics.year1}</b></span>
+                  <span>2年: <b className="text-slate-800 dark:text-slate-200">{selectedPersonality.tactics.year2}</b></span>
+                  <span>3年: <b className="text-rose-600 dark:text-rose-400">{selectedPersonality.tactics.year3}</b></span>
                 </div>
               </div>
             </div>
 
-            {/* 2. 伝令効果（攻撃・守備） */}
+            {/* 2. 伝令効果（守備時のみ・ベンチから指示） */}
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mb-3">
-                <Megaphone className="w-4 h-4 text-blue-500" /> 伝令効果（ベンチから指示）
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* 攻撃時 */}
-                <div className="bg-rose-50/50 dark:bg-rose-950/20 p-3.5 rounded-xl border border-rose-200 dark:border-rose-900/40 space-y-2">
-                  <div className="font-bold text-xs text-rose-700 dark:text-rose-300">
-                    ⚾ 攻撃時伝令
+              <div className="flex items-center justify-between mb-2.5">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                  <Megaphone className="w-4 h-4 text-blue-500" /> 伝令効果（守備時のみ・1試合3回まで）
+                </h4>
+                <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                  ※控え選手から指示を出します
+                </span>
+              </div>
+
+              <div className="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-xl border border-blue-200 dark:border-blue-900/60 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-200/60 dark:border-blue-900/60 pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base font-black text-blue-700 dark:text-blue-300">
+                      伝令：【{selectedPersonality.defenseOrder.command}】
+                    </span>
+                    <span className="text-[11px] px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 font-semibold flex items-center gap-1">
+                      <UserCheck className="w-3 h-3" />
+                      対象: {selectedPersonality.defenseOrder.target}
+                    </span>
                   </div>
-                  <div className="space-y-1.5 text-xs">
-                    <div><b className="text-slate-700 dark:text-slate-300">1年:</b> {selectedPersonality.ordersAttack.year1.name} → <span className="text-slate-600 dark:text-slate-400">{selectedPersonality.ordersAttack.year1.effect}</span></div>
-                    <div><b className="text-slate-700 dark:text-slate-300">2年:</b> {selectedPersonality.ordersAttack.year2.name} → <span className="text-slate-600 dark:text-slate-400">{selectedPersonality.ordersAttack.year2.effect}</span></div>
-                    <div><b className="text-slate-700 dark:text-slate-300">3年:</b> {selectedPersonality.ordersAttack.year3.name} → <span className="font-semibold text-rose-700 dark:text-rose-300">{selectedPersonality.ordersAttack.year3.effect}</span></div>
+                  <span className="text-[11px] px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200 font-semibold flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {selectedPersonality.defenseOrder.duration}
+                  </span>
+                </div>
+
+                <p className="text-xs text-slate-700 dark:text-slate-300">
+                  {selectedPersonality.defenseOrder.description}
+                </p>
+
+                {/* 学年別効果 */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs pt-1">
+                  <div className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-blue-100 dark:border-blue-900/40">
+                    <span className="font-bold text-slate-500 block text-[10px]">1年生の伝令:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedPersonality.defenseOrder.year1}</span>
+                  </div>
+                  <div className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-blue-100 dark:border-blue-900/40">
+                    <span className="font-bold text-slate-500 block text-[10px]">2年生の伝令:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">{selectedPersonality.defenseOrder.year2}</span>
+                  </div>
+                  <div className="p-2 bg-white dark:bg-slate-800 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <span className="font-bold text-blue-600 dark:text-blue-400 block text-[10px]">3年生の伝令 (最大効果):</span>
+                    <span className="font-bold text-blue-700 dark:text-blue-300">{selectedPersonality.defenseOrder.year3}</span>
                   </div>
                 </div>
 
-                {/* 守備時 */}
-                <div className="bg-blue-50/50 dark:bg-blue-950/20 p-3.5 rounded-xl border border-blue-200 dark:border-blue-900/40 space-y-2">
-                  <div className="font-bold text-xs text-blue-700 dark:text-blue-300">
-                    🧤 守備時伝令
-                  </div>
-                  <div className="space-y-1.5 text-xs">
-                    <div><b className="text-slate-700 dark:text-slate-300">1年:</b> {selectedPersonality.ordersDefense.year1.name} → <span className="text-slate-600 dark:text-slate-400">{selectedPersonality.ordersDefense.year1.effect}</span></div>
-                    <div><b className="text-slate-700 dark:text-slate-300">2年:</b> {selectedPersonality.ordersDefense.year2.name} → <span className="text-slate-600 dark:text-slate-400">{selectedPersonality.ordersDefense.year2.effect}</span></div>
-                    <div><b className="text-slate-700 dark:text-slate-300">3年:</b> {selectedPersonality.ordersDefense.year3.name} → <span className="font-semibold text-blue-700 dark:text-blue-300">{selectedPersonality.ordersDefense.year3.effect}</span></div>
-                  </div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 pt-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>キャッチャーやキャプテンが伝令に行くと、追加でランダムなプラス効果（信頼度UP・テンションUP等）が付与されます。</span>
                 </div>
               </div>
             </div>
