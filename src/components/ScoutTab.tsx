@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { PLAYERS_DATA, REGIONS, POSITIONS, Player } from '../data/players';
+import { PLAYERS_DATA, REGIONS, POSITIONS, PREFECTURE_ORDER, Player } from '../data/players';
 import { Search, Sparkles, Shield, Bookmark, Filter, Award, School, MapPin, Compass, Info, ArrowRightLeft } from 'lucide-react';
 
 export const ScoutTab: React.FC = () => {
@@ -51,7 +51,7 @@ export const ScoutTab: React.FC = () => {
     return false;
   };
 
-  // Prefectures list based on region and current mode
+  // Prefectures list based on region and current mode (ordered North to South)
   const availablePrefectures = useMemo(() => {
     const set = new Set<string>();
     PLAYERS_DATA.forEach(p => {
@@ -60,7 +60,14 @@ export const ScoutTab: React.FC = () => {
         set.add(loc.pref);
       }
     });
-    return ['すべて', ...Array.from(set).sort((a, b) => a.localeCompare(b, 'ja'))];
+    return [
+      'すべて',
+      ...Array.from(set).sort((a, b) => {
+        const idxA = PREFECTURE_ORDER.indexOf(a);
+        const idxB = PREFECTURE_ORDER.indexOf(b);
+        return (idxA !== -1 ? idxA : 999) - (idxB !== -1 ? idxB : 999);
+      })
+    ];
   }, [selectedRegion, searchMode]);
 
   const filteredPlayers = useMemo(() => {
