@@ -117,10 +117,6 @@ export const ScoutTab: React.FC = () => {
     return PLAYERS_DATA.filter(p => p.isCrossBorder).length;
   }, []);
 
-  const shikokuCount = useMemo(() => {
-    return PLAYERS_DATA.filter(p => p.scoutRegion === '四国' || p.highSchoolRegion === '四国').length;
-  }, []);
-
   return (
     <div className="space-y-5">
       {/* Mode Selector Hero Banner */}
@@ -131,7 +127,7 @@ export const ScoutTab: React.FC = () => {
               <span>🏟️</span> 転生スカウト ＆ リセマラ出現選手DB
             </h2>
             <p className="text-xs sm:text-sm text-blue-100 mt-1">
-              栄冠ナインの「ゲーム中スカウト（出身地）」と「初回リセマラ（高校所在地）」を完全分離・両対応！全国47都道府県網羅（四国 {shikokuCount} 名）
+              栄冠ナインの「ゲーム中スカウト（出身地）」と「初回リセマラ（高校所在地）」を完全分離・両対応！全国47都道府県完全網羅！
             </p>
           </div>
 
@@ -302,7 +298,6 @@ export const ScoutTab: React.FC = () => {
                 }`}
               >
                 {reg}
-                {reg === '四国' && <span className="ml-1 text-[10px] bg-amber-400 text-amber-950 px-1 rounded-full font-extrabold">{shikokuCount}</span>}
               </button>
             ))}
           </div>
