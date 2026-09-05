@@ -42,12 +42,21 @@ export const ScoutTab: React.FC = () => {
     }
   };
 
+  // Flexible region matcher (supports '中国', '四国', '中国・四国', '北信越', '甲信越・北陸')
+  const matchRegion = (playerRegion: string, filterRegion: string) => {
+    if (filterRegion === 'すべて') return true;
+    if (filterRegion === playerRegion) return true;
+    if (filterRegion === '中国・四国' && (playerRegion === '中国' || playerRegion === '四国')) return true;
+    if ((filterRegion === '北信越' || filterRegion === '甲信越・北陸') && (playerRegion === '北信越' || playerRegion === '甲信越・北陸')) return true;
+    return false;
+  };
+
   // Prefectures list based on region and current mode
   const availablePrefectures = useMemo(() => {
     const set = new Set<string>();
     PLAYERS_DATA.forEach(p => {
       const loc = getPlayerActiveLocation(p);
-      if (selectedRegion === 'すべて' || loc.region === selectedRegion) {
+      if (matchRegion(loc.region, selectedRegion)) {
         set.add(loc.pref);
       }
     });
@@ -71,7 +80,7 @@ export const ScoutTab: React.FC = () => {
         }
       }
 
-      if (selectedRegion !== 'すべて' && loc.region !== selectedRegion) return false;
+      if (!matchRegion(loc.region, selectedRegion)) return false;
       if (selectedPref !== 'すべて' && loc.pref !== selectedPref) return false;
       if (selectedPos !== 'すべて' && p.pos !== selectedPos) return false;
       if (onlyGold && !p.isGold) return false;
@@ -101,6 +110,10 @@ export const ScoutTab: React.FC = () => {
     return PLAYERS_DATA.filter(p => p.isCrossBorder).length;
   }, []);
 
+  const shikokuCount = useMemo(() => {
+    return PLAYERS_DATA.filter(p => p.scoutRegion === '四国' || p.highSchoolRegion === '四国').length;
+  }, []);
+
   return (
     <div className="space-y-5">
       {/* Mode Selector Hero Banner */}
@@ -111,7 +124,7 @@ export const ScoutTab: React.FC = () => {
               <span>🏟️</span> 転生スカウト ＆ リセマラ出現選手DB
             </h2>
             <p className="text-xs sm:text-sm text-blue-100 mt-1">
-              栄冠ナインの「ゲーム中スカウト（出身地）」と「初回リセマラ（高校所在地）」を完全分離・両対応！
+              栄冠ナインの「ゲーム中スカウト（出身地）」と「初回リセマラ（高校所在地）」を完全分離・両対応！全国47都道府県網羅（四国 {shikokuCount} 名）
             </p>
           </div>
 
@@ -240,7 +253,7 @@ export const ScoutTab: React.FC = () => {
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder={`選手名、都道府県、高校名（例: 東北、光星、横浜）、特能で検索...`}
+              placeholder={`選手名、都道府県（例: 香川、徳島、高知、愛媛）、高校名、特能で検索...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -282,6 +295,7 @@ export const ScoutTab: React.FC = () => {
                 }`}
               >
                 {reg}
+                {reg === '四国' && <span className="ml-1 text-[10px] bg-amber-400 text-amber-950 px-1 rounded-full font-extrabold">{shikokuCount}</span>}
               </button>
             ))}
           </div>
