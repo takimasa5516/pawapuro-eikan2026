@@ -1,6 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { PLAYERS_DATA, REGIONS, POSITIONS, PREFECTURE_ORDER, Player } from '../data/players';
-import { Search, Sparkles, Shield, Bookmark, Filter, Award, School, MapPin, Compass, Info, ArrowRightLeft } from 'lucide-react';
+import { getPlayerDetails, getStatGradeColor } from '../data/playerDetails';
+import { 
+  Search, 
+  Sparkles, 
+  Shield, 
+  Bookmark, 
+  Award, 
+  School, 
+  MapPin, 
+  ArrowRightLeft, 
+  AlertTriangle, 
+  CheckCircle2, 
+  ChevronDown, 
+  ChevronUp, 
+  Activity, 
+  Zap,
+  Info
+} from 'lucide-react';
 
 export const ScoutTab: React.FC = () => {
   // Mode: 'scout' (進行中スカウト: 出身地/中学基準) vs 'reroll' (初回リセマラ: 高校所在地基準)
@@ -13,6 +30,9 @@ export const ScoutTab: React.FC = () => {
   const [onlyCatcherB, setOnlyCatcherB] = useState(false);
   const [onlyOver300, setOnlyOver300] = useState(false);
   const [onlyCrossBorder, setOnlyCrossBorder] = useState(false);
+  const [onlyNoRed, setOnlyNoRed] = useState(false);
+  const [expandedIds, setExpandedIds] = useState<number[]>([]);
+  const [viewDensity, setViewDensity] = useState<'standard' | 'detailed'>('standard');
   const [showExplanation, setShowExplanation] = useState(false);
   const [sortBy, setSortBy] = useState<'stars-desc' | 'stars-asc' | 'year-desc' | 'year-asc' | 'name'>('stars-desc');
   
@@ -31,6 +51,12 @@ export const ScoutTab: React.FC = () => {
       localStorage.setItem('pawapuro_eikan_saved', JSON.stringify(next));
       return next;
     });
+  };
+
+  const toggleExpand = (id: number) => {
+    setExpandedIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
   };
 
   // Helper to get active region & prefecture according to current mode
@@ -73,6 +99,7 @@ export const ScoutTab: React.FC = () => {
   const filteredPlayers = useMemo(() => {
     return PLAYERS_DATA.filter(p => {
       const loc = getPlayerActiveLocation(p);
+      const details = getPlayerDetails(p);
 
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
@@ -82,7 +109,9 @@ export const ScoutTab: React.FC = () => {
         const matchSchool = p.highSchool.toLowerCase().includes(q);
         const matchSpecial = p.special.toLowerCase().includes(q);
         const matchYear = p.year.toString().includes(q);
-        if (!matchName && !matchScoutPref && !matchHSPref && !matchSchool && !matchSpecial && !matchYear) {
+        const matchBlue = details.blueAbilities.some(b => b.toLowerCase().includes(q));
+        const matchRed = details.redAbilities.some(r => r.toLowerCase().includes(q));
+        if (!matchName && !matchScoutPref && !matchHSPref && !matchSchool && !matchSpecial && !matchYear && !matchBlue && !matchRed) {
           return false;
         }
       }
@@ -94,6 +123,7 @@ export const ScoutTab: React.FC = () => {
       if (onlyCatcherB && !(p.catcherGrade === 'A' || p.catcherGrade === 'B')) return false;
       if (onlyOver300 && p.stars < 300) return false;
       if (onlyCrossBorder && !p.isCrossBorder) return false;
+      if (onlyNoRed && details.redAbilities.length > 0) return false;
 
       return true;
     }).sort((a, b) => {
@@ -103,14 +133,30 @@ export const ScoutTab: React.FC = () => {
       if (sortBy === 'year-asc') return a.year - b.year;
       return a.name.localeCompare(b.name, 'ja');
     });
-  }, [searchQuery, selectedRegion, selectedPref, selectedPos, onlyGold, onlyCatcherB, onlyOver300, onlyCrossBorder, sortBy, searchMode]);
+  }, [searchQuery, selectedRegion, selectedPref, selectedPos, onlyGold, onlyCatcherB, onlyOver300, onlyCrossBorder, onlyNoRed, sortBy, searchMode]);
 
   const getStarColor = (stars: number) => {
-    if (stars >= 400) return 'text-purple-600 dark:text-purple-400 font-extrabold';
-    if (stars >= 350) return 'text-rose-600 dark:text-rose-400 font-bold';
+    if (stars >= 400) return 'text-purple-600 dark:text-purple-400 font-black';
+    if (stars >= 350) return 'text-rose-600 dark:text-rose-400 font-extrabold';
     if (stars >= 300) return 'text-amber-600 dark:text-amber-400 font-bold';
     if (stars >= 270) return 'text-blue-600 dark:text-blue-400 font-semibold';
     return 'text-emerald-600 dark:text-emerald-400 font-semibold';
+  };
+
+  const getPosBadgeColor = (pos: string) => {
+    switch (pos) {
+      case '投':
+        return 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200 border-rose-300 dark:border-rose-800';
+      case '捕':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200 border-blue-300 dark:border-blue-800';
+      case '一':
+      case '二':
+      case '三':
+      case '遊':
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200 border-amber-300 dark:border-amber-800';
+      default:
+        return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800';
+    }
   };
 
   const crossBorderCount = useMemo(() => {
@@ -118,172 +164,139 @@ export const ScoutTab: React.FC = () => {
   }, []);
 
   return (
-    <div className="space-y-5">
-      {/* Mode Selector Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-700 rounded-2xl p-5 text-white shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 rounded-2xl p-5 text-white shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-extrabold flex items-center gap-2">
-              <span>🏟️</span> 転生スカウト ＆ リセマラ出現選手DB
-            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🏟️</span>
+              <h2 className="text-xl font-extrabold">転生スカウト ＆ リセマラ出現選手DB</h2>
+              <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">全373名収録</span>
+            </div>
             <p className="text-xs sm:text-sm text-blue-100 mt-1">
-              栄冠ナインの「ゲーム中スカウト（出身地）」と「初回リセマラ（高校所在地）」を完全分離・両対応！全国47都道府県完全網羅！
+              1年入学時の<b>初期ステータス</b>および<b>重要青特・注意赤特</b>を併記！スカウト（出身地）とリセマラ（高校所在地）を完全切り替え可能
             </p>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowExplanation(!showExplanation)}
-              className="flex items-center gap-1 text-xs bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-xl transition-all border border-white/30"
-            >
-              <Info className="w-3.5 h-3.5 text-amber-300" />
-              <span>地域差の仕様解説</span>
-            </button>
-            <div className="text-xs bg-black/30 px-3 py-1.5 rounded-xl border border-white/20 font-bold text-amber-300">
-              全 {PLAYERS_DATA.length} 名
-            </div>
-          </div>
+          
+          <button
+            onClick={() => setShowExplanation(!showExplanation)}
+            className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-xl border border-white/20 text-xs font-semibold self-start sm:self-auto transition-colors"
+          >
+            <Info className="w-4 h-4 text-amber-300" />
+            <span>スカウトとリセマラの違いとは？</span>
+          </button>
         </div>
 
-        {/* Dual Mode Tabs Switcher */}
-        <div className="mt-4 pt-3 border-t border-white/20">
-          <div className="text-xs font-bold text-blue-200 mb-2 flex items-center gap-1.5">
-            <Compass className="w-3.5 h-3.5" /> 探索目的を選んでください:
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {/* Scout Mode Tab */}
+        {/* Mode Switcher Buttons */}
+        <div className="mt-4 pt-4 border-t border-white/15 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <span className="text-xs font-bold text-blue-200 whitespace-nowrap flex items-center gap-1">
+            <span>🎯</span> 検索モード:
+          </span>
+          <div className="grid grid-cols-2 gap-2 flex-1 max-w-xl">
             <button
-              onClick={() => {
-                setSearchMode('scout');
-                setSelectedPref('すべて');
-              }}
-              className={`p-3 rounded-xl text-left transition-all border ${
+              onClick={() => setSearchMode('scout')}
+              className={`px-3 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 shadow-sm ${
                 searchMode === 'scout'
-                  ? 'bg-white text-slate-900 shadow-md border-white ring-2 ring-amber-400'
-                  : 'bg-white/10 hover:bg-white/15 text-white border-white/20'
+                  ? 'bg-white text-blue-900 shadow-md ring-2 ring-white/50'
+                  : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-bold text-sm">
-                  <span className="text-lg">🎒</span>
-                  <span>ゲーム進行中 スカウトモード</span>
-                </div>
-                {searchMode === 'scout' && (
-                  <span className="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold">
-                    選択中
-                  </span>
-                )}
-              </div>
-              <p className={`text-xs mt-1 ${searchMode === 'scout' ? 'text-slate-600' : 'text-blue-100'}`}>
-                <b>【出身地（中学所在地）基準】</b> 11月〜2月に中学生をスカウトしに行く時の出現地域で絞り込みます。
-              </p>
+              <MapPin className="w-3.5 h-3.5" />
+              <span>進行中スカウトモード (出身中学校)</span>
             </button>
-
-            {/* Reroll Mode Tab */}
             <button
-              onClick={() => {
-                setSearchMode('reroll');
-                setSelectedPref('すべて');
-              }}
-              className={`p-3 rounded-xl text-left transition-all border ${
+              onClick={() => setSearchMode('reroll')}
+              className={`px-3 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 shadow-sm ${
                 searchMode === 'reroll'
-                  ? 'bg-white text-slate-900 shadow-md border-white ring-2 ring-amber-400'
-                  : 'bg-white/10 hover:bg-white/15 text-white border-white/20'
+                  ? 'bg-amber-400 text-slate-950 shadow-md ring-2 ring-amber-300/50'
+                  : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 font-bold text-sm">
-                  <span className="text-lg">🏫</span>
-                  <span>開始時 リセマラモード</span>
-                </div>
-                {searchMode === 'reroll' && (
-                  <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">
-                    選択中
-                  </span>
-                )}
-              </div>
-              <p className={`text-xs mt-1 ${searchMode === 'reroll' ? 'text-slate-600' : 'text-blue-100'}`}>
-                <b>【高校の所在地 基準】</b> ゲーム開始時に選択する都道府県の出身校OB（新入生）で絞り込みます。
-              </p>
+              <School className="w-3.5 h-3.5" />
+              <span>初回リセマラモード (高校所在地)</span>
             </button>
           </div>
         </div>
-
-        {/* Accordion Explanation Box */}
-        {showExplanation && (
-          <div className="mt-3 p-3.5 bg-black/40 rounded-xl text-xs space-y-2 border border-white/20 animate-fadeIn">
-            <div className="font-bold text-amber-300 flex items-center gap-1.5">
-              <span>💡 なぜ「スカウト」と「リセマラ」で地域が違うのか？</span>
-            </div>
-            <p className="text-blue-100 leading-relaxed">
-              栄冠ナインでは、<b>「新入生（ゲーム開始時リセマラ）」は高校の所在地</b>を基準にそのOBが入学してきますが、
-              <b>「進行中の新入生スカウト」は中学所在地（出身地）</b>に出現します。
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
-              <div className="bg-white/10 p-2 rounded-lg">
-                <span className="text-amber-300 font-bold">ダルビッシュ有:</span><br/>
-                • スカウト先: <b>大阪府</b>（出身・羽曳野ボーイズ）<br/>
-                • リセマラ開始: <b>宮城県</b>（東北高校）
-              </div>
-              <div className="bg-white/10 p-2 rounded-lg">
-                <span className="text-amber-300 font-bold">田中将大 / 坂本勇人:</span><br/>
-                • スカウト先: <b>兵庫県</b>（二人とも兵庫県伊丹市出身）<br/>
-                • リセマラ開始: 田中＝<b>北海道</b>(駒苫) / 坂本＝<b>青森県</b>(光星)
-              </div>
-              <div className="bg-white/10 p-2 rounded-lg">
-                <span className="text-amber-300 font-bold">松坂大輔:</span><br/>
-                • スカウト先: <b>東京都</b>（江戸川南シニア）<br/>
-                • リセマラ開始: <b>神奈川県</b>（横浜高校）
-              </div>
-              <div className="bg-white/10 p-2 rounded-lg">
-                <span className="text-amber-300 font-bold">山本由伸:</span><br/>
-                • スカウト先: <b>岡山県</b>（備前ボーイズ）<br/>
-                • リセマラ開始: <b>宮崎県</b>（都城高校）
-              </div>
-            </div>
-            <p className="text-slate-300 text-[10px]">
-              ※当アプリではこの越境進学選手（全{crossBorderCount}名）をすべて識別・分離管理しています。
-            </p>
-          </div>
-        )}
       </div>
 
-      {/* Filter Toolbar */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-        {/* Search & Sort */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="relative sm:col-span-2">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* Explanation Box */}
+      {showExplanation && (
+        <div className="bg-amber-50 dark:bg-amber-950/40 rounded-2xl p-4 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-900 dark:text-amber-200 space-y-2">
+          <h4 className="font-extrabold text-sm flex items-center gap-2 text-amber-800 dark:text-amber-300">
+            <Info className="w-4 h-4 text-amber-500" />
+            栄冠ナインにおける「出身地」と「高校所在地」の重要ルール
+          </h4>
+          <p className="leading-relaxed">
+            ・<b>進行中スカウト（秋〜冬のスカウト活動）</b>：選手の<b>出身中学校（出身地）</b>の都道府県に出現します。例：ダルビッシュ有は「大阪」のスカウトで出現。
+          </p>
+          <p className="leading-relaxed">
+            ・<b>初回新入生リセマラ（4月ゲーム開始時）</b>：ゲーム開始時に選んだ<b>高校所在地</b>に出現します。例：ダルビッシュ有は「宮城（東北高校）」スタートで出現。
+          </p>
+          <p className="leading-relaxed">
+            ・<b>越境進学選手（全{crossBorderCount}名）</b>：出身地と高校が異なる選手には「越境進学」バッジが付与されます。
+          </p>
+        </div>
+      )}
+
+      {/* Search & Filter Bar */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3">
+        {/* Search Input & Sort & View Density */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder={`選手名、都道府県（例: 香川、徳島、高知、愛媛）、高校名、特能で検索...`}
+              placeholder="選手名、高校名、地域、特能（パワヒ、送球E、奪三振など）で検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 whitespace-nowrap font-medium">並び替え:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full py-2 px-3 text-sm rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+              className="py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs font-semibold focus:outline-none"
             >
-              <option value="stars-desc">★能力値が高い順</option>
-              <option value="stars-asc">★能力値が低い順</option>
-              <option value="year-desc">年代が新しい順</option>
-              <option value="year-asc">年代が古い順</option>
+              <option value="stars-desc">★能力値 高い順</option>
+              <option value="stars-asc">★能力値 低い順</option>
+              <option value="year-desc">年代 新しい順</option>
+              <option value="year-asc">年代 古い順</option>
               <option value="name">五十音順</option>
             </select>
+
+            {/* 表示密度切り替え */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+              <button
+                onClick={() => setViewDensity('standard')}
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  viewDensity === 'standard'
+                    ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                標準
+              </button>
+              <button
+                onClick={() => setViewDensity('detailed')}
+                className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  viewDensity === 'detailed'
+                    ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-slate-500 dark:text-slate-400'
+                }`}
+              >
+                全開
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Region & Prefecture Tabs */}
+        {/* Region & Position Filters */}
         <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-700">
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
-            <span className="font-bold text-slate-500 mr-1 whitespace-nowrap flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" /> 地方:
-            </span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-xs font-bold text-slate-500 mr-1">地方:</span>
             {REGIONS.map(reg => (
               <button
                 key={reg}
@@ -291,10 +304,10 @@ export const ScoutTab: React.FC = () => {
                   setSelectedRegion(reg);
                   setSelectedPref('すべて');
                 }}
-                className={`px-2.5 py-1 rounded-lg font-medium transition-all whitespace-nowrap ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors ${
                   selectedRegion === reg
-                    ? 'bg-blue-600 text-white shadow-sm font-bold'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
                 }`}
               >
                 {reg}
@@ -304,7 +317,7 @@ export const ScoutTab: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="font-bold text-slate-500">
-              {searchMode === 'scout' ? 'スカウト出現県:' : 'リセマラ開始県:'}
+              {searchMode === 'scout' ? 'スカウト出身県:' : 'リセマラ開始県:'}
             </span>
             <select
               value={selectedPref}
@@ -339,6 +352,18 @@ export const ScoutTab: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-700 text-xs">
           <span className="font-bold text-slate-500">絞り込み:</span>
           
+          <button
+            onClick={() => setOnlyNoRed(!onlyNoRed)}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full border transition-all ${
+              onlyNoRed
+                ? 'bg-emerald-100 text-emerald-900 border-emerald-400 font-bold dark:bg-emerald-950 dark:text-emerald-200 shadow-sm ring-1 ring-emerald-400'
+                : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-700 dark:text-slate-300'
+            }`}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            赤特なしのみ
+          </button>
+
           <button
             onClick={() => setOnlyCrossBorder(!onlyCrossBorder)}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-full border transition-all ${
@@ -391,36 +416,51 @@ export const ScoutTab: React.FC = () => {
       </div>
 
       {/* Player Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filteredPlayers.map((player) => {
           const isSaved = savedIds.includes(player.id);
+          const isExpanded = viewDensity === 'detailed' || expandedIds.includes(player.id);
+          const details = getPlayerDetails(player);
+          const { initialStats, blueAbilities, redAbilities, advice } = details;
+          const isPitcher = player.pos === '投';
+          const isDual = player.special === '二刀流' || (initialStats.speed && initialStats.meet);
 
           return (
             <div
               key={player.id}
-              className={`bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border transition-all flex flex-col justify-between ${
+              className={`bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border transition-all flex flex-col justify-between ${
                 player.isCrossBorder
                   ? 'border-amber-300 dark:border-amber-800/80 hover:border-amber-500'
                   : 'border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500'
               }`}
             >
-              <div>
-                {/* Header: Pos, Name, Stars */}
+              <div className="space-y-3">
+                {/* Header: Pos, Name, Stars, Bookmark */}
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 flex items-center justify-center text-xs font-black border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black border shrink-0 ${getPosBadgeColor(player.pos)}`}>
                       {player.pos}
                     </span>
-                    <div>
-                      <h3 className="font-extrabold text-base text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                        {player.name}
+                    <div className="min-w-0">
+                      <h3 className="font-black text-base text-slate-900 dark:text-slate-100 truncate flex items-center gap-1.5">
+                        <span className="truncate">{player.name}</span>
                         {player.dlc && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300">
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 font-bold shrink-0">
                             DLC
                           </span>
                         )}
+                        {player.isGold && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-400 text-amber-950 font-extrabold shrink-0 shadow-sm">
+                            金特
+                          </span>
+                        )}
+                        {player.catcherGrade && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-600 text-white font-black shrink-0 shadow-sm">
+                            捕{player.catcherGrade}
+                          </span>
+                        )}
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
                         <span className="font-bold text-blue-600 dark:text-blue-400">
                           {searchMode === 'scout' ? `🎒 ${player.scoutPref}` : `🏫 ${player.highSchoolPref}`}
                         </span>
@@ -430,20 +470,31 @@ export const ScoutTab: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="text-right">
+                  <div className="flex items-center gap-2 shrink-0">
                     <span className={`text-lg leading-none ${getStarColor(player.stars)}`}>
                       ★{player.stars}
                     </span>
+                    <button
+                      onClick={() => toggleSave(player.id)}
+                      className={`p-1.5 rounded-lg transition-colors ${
+                        isSaved
+                          ? 'text-amber-500 bg-amber-50 dark:bg-amber-950'
+                          : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700'
+                      }`}
+                      title={isSaved ? 'キープ中（クリックで解除）' : 'お気に入り・キープ登録'}
+                    >
+                      <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-amber-500' : ''}`} />
+                    </button>
                   </div>
                 </div>
 
                 {/* Cross-border and High School Information Badge */}
-                <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-700/80">
+                <div>
                   {player.isCrossBorder ? (
-                    <div className="bg-amber-50 dark:bg-amber-950/40 rounded-lg p-2 border border-amber-200 dark:border-amber-900/60 text-[11px] space-y-1">
+                    <div className="bg-amber-50/80 dark:bg-amber-950/40 rounded-xl p-2 border border-amber-200 dark:border-amber-900/60 text-[11px] space-y-1">
                       <div className="flex items-center justify-between font-bold text-amber-900 dark:text-amber-200">
                         <span className="flex items-center gap-1">
-                          <ArrowRightLeft className="w-3 h-3 text-amber-600" />
+                          <ArrowRightLeft className="w-3.5 h-3.5 text-amber-600" />
                           <span>越境進学選手</span>
                         </span>
                         <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 font-bold">
@@ -451,83 +502,259 @@ export const ScoutTab: React.FC = () => {
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-700 dark:text-slate-300">
-                        <div>
+                        <div className="truncate">
                           <span className="text-slate-400 block text-[10px]">🎒 スカウト (出身):</span>
-                          <span className="font-semibold text-blue-600 dark:text-blue-400">{player.scoutPref}</span>
+                          <span className="font-semibold text-blue-600 dark:text-blue-400 truncate">{player.scoutPref}</span>
                         </div>
-                        <div>
+                        <div className="truncate">
                           <span className="text-slate-400 block text-[10px]">🏫 リセマラ (高校):</span>
-                          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                          <span className="font-semibold text-emerald-600 dark:text-emerald-400 truncate">
                             {player.highSchoolPref} {player.highSchool ? `(${player.highSchool})` : ''}
                           </span>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <School className="w-3 h-3 text-slate-400" />
-                        <span>出身高校: <b>{player.highSchool ? `${player.highSchool}高校` : `${player.scoutPref}内の高校`}</b></span>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60 px-2.5 py-1 rounded-lg border border-slate-100 dark:border-slate-800">
+                      <span className="flex items-center gap-1 truncate">
+                        <School className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className="truncate">高校: <b>{player.highSchool ? `${player.highSchool}高` : `${player.scoutPref}内`}</b></span>
                       </span>
-                      <span className="text-[10px] text-slate-400">スカウト・リセマラ共通</span>
+                      <span className="text-[10px] text-slate-400 shrink-0">スカウト/高校同一</span>
                     </div>
                   )}
                 </div>
 
-                {/* Badges / Special Abilities */}
-                <div className="mt-2.5 flex flex-wrap gap-1.5">
-                  {player.isGold && (
-                    <span className="badge-gold px-2 py-0.5 rounded text-xs flex items-center gap-1 shadow-sm font-semibold">
-                      <Award className="w-3 h-3 text-amber-600" />
-                      {player.special}
+                {/* 1年入学時 初期ステータス表示（併記ブロック） */}
+                <div className="bg-slate-50 dark:bg-slate-900/80 rounded-xl p-2.5 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                      <Activity className="w-3.5 h-3.5 text-blue-500" />
+                      <span>1年入学時 初期能力</span>
                     </span>
+                    <span className="text-[10px] font-semibold text-slate-400">
+                      {isDual ? '二刀流スペック' : isPitcher ? '投手スペック' : '野手スペック'}
+                    </span>
+                  </div>
+
+                  {/* 投手能力バー */}
+                  {(isPitcher || isDual) && initialStats.speed && (
+                    <div className="space-y-1.5">
+                      {isDual && <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400">【投手能力】</span>}
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+                        {/* 球速 */}
+                        <div className="px-2 py-0.5 rounded-md bg-rose-100 text-rose-900 border border-rose-300 dark:bg-rose-950 dark:text-rose-200 font-bold flex items-center gap-1">
+                          <Zap className="w-3 h-3" />
+                          <span>{initialStats.speed}km/h</span>
+                        </div>
+
+                        {/* コントロール */}
+                        {(() => {
+                          const c = getStatGradeColor(initialStats.control);
+                          return (
+                            <div className={`px-2 py-0.5 rounded-md border flex items-center gap-1 ${c.badgeClass}`}>
+                              <span className="text-[10px] font-sans font-medium text-slate-500 dark:text-slate-400">制球</span>
+                              <span className="font-black">{c.grade}</span>
+                              <span className="text-[10px] font-sans">{c.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* スタミナ */}
+                        {(() => {
+                          const s = getStatGradeColor(initialStats.stamina);
+                          return (
+                            <div className={`px-2 py-0.5 rounded-md border flex items-center gap-1 ${s.badgeClass}`}>
+                              <span className="text-[10px] font-sans font-medium text-slate-500 dark:text-slate-400">スタ</span>
+                              <span className="font-black">{s.grade}</span>
+                              <span className="text-[10px] font-sans">{s.num}</span>
+                            </div>
+                          );
+                        })()}
+                      </div>
+
+                      {/* 変化球 */}
+                      {initialStats.breakingBalls && (
+                        <div className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center gap-1 pt-0.5">
+                          <span className="font-bold text-slate-400 text-[10px]">球種:</span>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">{initialStats.breakingBalls}</span>
+                        </div>
+                      )}
+                    </div>
                   )}
-                  {player.catcherGrade && (
-                    <span className="badge-blue px-2 py-0.5 rounded text-xs flex items-center gap-1 shadow-sm font-semibold">
-                      <Shield className="w-3 h-3 text-blue-600" />
-                      キャッチャー{player.catcherGrade}
-                    </span>
-                  )}
-                  {player.special === '二刀流' && (
-                    <span className="badge-green px-2 py-0.5 rounded text-xs font-semibold">
-                      二刀流
-                    </span>
-                  )}
-                  {player.isRecommend && !player.isGold && !player.catcherGrade && (
-                    <span className="bg-purple-100 text-purple-800 border border-purple-300 text-xs px-2 py-0.5 rounded dark:bg-purple-950 dark:text-purple-300 font-semibold">
-                      球界代表級
-                    </span>
+
+                  {/* 野手能力バー */}
+                  {(!isPitcher || isDual) && initialStats.meet && (
+                    <div className="space-y-1">
+                      {isDual && <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 block pt-1">【野手能力】</span>}
+                      <div className="flex flex-wrap gap-1 text-xs font-mono">
+                        {/* 弾道 */}
+                        <div className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950 dark:text-amber-200 font-bold flex items-center gap-0.5">
+                          <span className="text-[10px] font-sans text-amber-700 dark:text-amber-400">弾</span>
+                          <span>{initialStats.trajectory || 2}</span>
+                        </div>
+
+                        {/* ミート */}
+                        {(() => {
+                          const m = getStatGradeColor(initialStats.meet);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${m.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">ミ</span>
+                              <span className="font-black">{m.grade}</span>
+                              <span className="text-[10px] font-sans">{m.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* パワー */}
+                        {(() => {
+                          const p = getStatGradeColor(initialStats.power);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${p.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">パ</span>
+                              <span className="font-black">{p.grade}</span>
+                              <span className="text-[10px] font-sans">{p.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* 走力 */}
+                        {(() => {
+                          const r = getStatGradeColor(initialStats.run);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${r.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">走</span>
+                              <span className="font-black">{r.grade}</span>
+                              <span className="text-[10px] font-sans">{r.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* 肩力 */}
+                        {(() => {
+                          const a = getStatGradeColor(initialStats.arm);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${a.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">肩</span>
+                              <span className="font-black">{a.grade}</span>
+                              <span className="text-[10px] font-sans">{a.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* 守備力 */}
+                        {(() => {
+                          const f = getStatGradeColor(initialStats.fielding);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${f.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">守</span>
+                              <span className="font-black">{f.grade}</span>
+                              <span className="text-[10px] font-sans">{f.num}</span>
+                            </div>
+                          );
+                        })()}
+
+                        {/* 捕球 */}
+                        {(() => {
+                          const c = getStatGradeColor(initialStats.catching);
+                          return (
+                            <div className={`px-1.5 py-0.5 rounded border flex items-center gap-0.5 ${c.badgeClass}`}>
+                              <span className="text-[10px] font-sans text-slate-500">捕</span>
+                              <span className="font-black">{c.grade}</span>
+                              <span className="text-[10px] font-sans">{c.num}</span>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
                   )}
                 </div>
+
+                {/* 重要青特 ＆ 注意赤特 併記ブロック */}
+                <div className="space-y-2">
+                  {/* 青特 */}
+                  <div className="flex flex-wrap items-center gap-1">
+                    <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-900 shrink-0 flex items-center gap-0.5">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      <span>青特</span>
+                    </span>
+                    {blueAbilities.length > 0 ? (
+                      blueAbilities.map((ab, idx) => (
+                        <span 
+                          key={idx}
+                          className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60"
+                        >
+                          {ab}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-[11px] text-slate-400">特能なし</span>
+                    )}
+                  </div>
+
+                  {/* 赤特 */}
+                  <div className="flex flex-wrap items-center gap-1">
+                    <span className="text-[10px] font-black text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-200 dark:border-rose-900 shrink-0 flex items-center gap-0.5">
+                      <AlertTriangle className="w-2.5 h-2.5" />
+                      <span>赤特</span>
+                    </span>
+                    {redAbilities.length > 0 ? (
+                      redAbilities.map((ab, idx) => (
+                        <span 
+                          key={idx}
+                          className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-900"
+                        >
+                          {ab}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                        <span>赤特なし (育成安心)</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* 展開時：攻略アドバイス */}
+                {isExpanded && advice && (
+                  <div className="bg-amber-50/60 dark:bg-amber-950/30 p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/60 text-xs text-amber-900 dark:text-amber-200 leading-relaxed animate-fadeIn">
+                    <b className="text-amber-800 dark:text-amber-300 block mb-0.5">💡 育成アドバイス:</b>
+                    {advice}
+                    {redAbilities.length > 0 && (
+                      <span className="block mt-1 text-[11px] text-rose-700 dark:text-rose-300">
+                        ※赤特（{redAbilities.join('、')}）は特別指導マスや公式戦での消去を優先推奨。
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
 
-              {/* Card Footer: Save Button & Mode-Specific Advice */}
+              {/* Card Footer: Advice Toggle & Location Tip */}
               <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-slate-500">
                 <div className="truncate pr-2 font-medium">
                   {searchMode === 'scout' ? (
-                    <span className="text-blue-600 dark:text-blue-400 flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      スカウト先: <b>{player.scoutPref}</b> ({player.year}年)
+                    <span className="text-blue-600 dark:text-blue-400 flex items-center gap-1 truncate">
+                      <MapPin className="w-3 h-3 shrink-0" />
+                      <span className="truncate">スカウト先: <b>{player.scoutPref}</b> ({player.year}年)</span>
                     </span>
                   ) : (
-                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <School className="w-3 h-3" />
-                      リセマラ開始: <b>{player.highSchoolPref}</b> ({player.highSchool ? `${player.highSchool}高・` : ''}{player.year}年)
+                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 truncate">
+                      <School className="w-3 h-3 shrink-0" />
+                      <span className="truncate">開始高校: <b>{player.highSchoolPref}</b> ({player.highSchool ? `${player.highSchool}高・` : ''}{player.year}年)</span>
                     </span>
                   )}
                 </div>
 
-                <button
-                  onClick={() => toggleSave(player.id)}
-                  className={`p-1.5 rounded-lg transition-colors flex-shrink-0 ${
-                    isSaved
-                      ? 'text-amber-500 bg-amber-50 dark:bg-amber-950'
-                      : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700'
-                  }`}
-                  title={isSaved ? 'キープ中（クリックで解除）' : 'お気に入り・キープ登録'}
-                >
-                  <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-amber-500' : ''}`} />
-                </button>
+                {advice && viewDensity === 'standard' && (
+                  <button
+                    onClick={() => toggleExpand(player.id)}
+                    className="flex items-center gap-0.5 text-xs text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 font-semibold shrink-0 ml-1 py-0.5 px-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-colors"
+                  >
+                    <span>{isExpanded ? '閉じる' : '詳細'}</span>
+                    {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                  </button>
+                )}
               </div>
             </div>
           );
