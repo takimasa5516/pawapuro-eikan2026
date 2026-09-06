@@ -3426,8 +3426,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
       "梨田昌崇(B)"
     ],
     "maxOBStars": 284,
-    "highlightOB": "和田毅(★284), 大野豊(★282), 谷繁元信(★268/捕手A)",
-    "summary": "高校数39校。キャッチャーA谷繁元信やキャッチャーB梨田昌崇、名左腕大野豊・和田毅を狙える守備重視リセマラの聖地。",
+    "highlightOB": "和田毅(★284), 大野豊(★282), 谷繁元信(★268/精神的支柱・捕A)",
+    "summary": "高校数39校。金特「精神的支柱」＆キャッチャーAの谷繁元信やキャッチャーB梨田昌崇、名左腕大野豊・和田毅を狙える守備重視リセマラの聖地。",
     "obList": [
       {
         "name": "和田毅(DLC)",
@@ -3457,8 +3457,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "pos": "捕",
         "highSchool": "江の川",
         "year": 1986,
-        "special": "キャッチャーA",
-        "isGold": false,
+        "special": "精神的支柱",
+        "isGold": true,
         "catcherGrade": "A",
         "dlc": true
       },

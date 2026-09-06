@@ -398,17 +398,17 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
   },
   '谷繁元信(DLC)': {
     initialStats: { trajectory: 2, meet: 'D56', power: 'C66', run: 'D50', arm: 'A86', fielding: 'A82', catching: 'B72' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'プルヒッター'],
+    goldAbilities: ['精神的支柱'],
+    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'ホーム死守', 'ケガしにくさB'],
     redAbilities: ['三振'],
-    advice: 'キャッチャーA持ちの守備特化型名捕手。投手陣の防御率が劇的に改善します。'
+    advice: '【強力金特バフ＋キャッチャーA】金特「精神的支柱」でチーム全員の能力を底上げしつつ、キャッチャーAで投手を盤石にリード。最優秀バッテリーの核。'
   },
   '谷繁元信': {
     initialStats: { trajectory: 2, meet: 'D55', power: 'C65', run: 'D50', arm: 'A85', fielding: 'A80', catching: 'B70' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'プルヒッター'],
+    goldAbilities: ['精神的支柱'],
+    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'ホーム死守', 'ケガしにくさB'],
     redAbilities: ['三振'],
-    advice: 'キャッチャーA持ちの守備特化型名捕手。投手陣の防御率が劇的に改善します。'
+    advice: '【強力金特バフ＋キャッチャーA】金特「精神的支柱」でチーム全員の能力を底上げしつつ、キャッチャーAで投手を盤石にリード。最優秀バッテリーの核。'
   },
   '森昌彦': {
     initialStats: { trajectory: 2, meet: 'C60', power: 'C60', run: 'D52', arm: 'A84', fielding: 'A82', catching: 'B74' },
