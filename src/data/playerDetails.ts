@@ -24,6 +24,8 @@ export interface PlayerDetails {
 
 // 金特とそれに対応する下位青特のマッピング（金特所持時は下位青特を非表示にするルール）
 export const GOLD_TO_LOWER_MAP: Record<string, string[]> = {
+  '威圧感': [],
+  'ギアチェンジ': [],
   '球界の頭脳': ['キャッチャーA', 'キャッチャーB', 'キャッチャー○'],
   'アーチスト': ['パワーヒッター'],
   '怪力': ['パワーヒッター'],
@@ -107,55 +109,258 @@ export function getStatGradeColor(statStr?: string | number): {
 // 【パワプロ2026 栄冠ナイン準拠】転生選手・高校1年入学時初期ステータス一覧辞書
 // ※プロ通常査定データから高校1年入学時バランス（各能力1.5〜2.5ランク減算）へ正確にスケーリング済み
 const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
+  '川﨑宗則': {
+    initialStats: {trajectory: 2,meet: 'D56',power: 'E43',run: 'C66',arm: 'E45',fielding: 'C61',catching: 'D52'},
+    goldAbilities: [],
+    blueAbilities: ['内野安打○','バント職人','流し打ち','粘り打ち','守備職人','走塁B','送球B'],
+    redAbilities: [],
+    advice: '【ムネリン★235】走力C66・守備C61・内野安打◯・守備職人・バント職人。鹿児島スタートのリードオフマン。'
+  },
+  '西山秀二': {
+    initialStats: {trajectory: 2,meet: 'D56',power: 'E43',run: 'E45',arm: 'D54',fielding: 'D52',catching: 'F27'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','粘り打ち','ホーム死守','送球B','回復C'],
+    redAbilities: ['チャンスE','対左投手E','ケガしにくさE'],
+    advice: '★196。ミートD56・送球B・ホーム死守。※キャッチャー適性はC査定。'
+  },
+  '木下拓哉': {
+    initialStats: {trajectory: 3,meet: 'E49',power: 'D55',run: 'F29',arm: 'D55',fielding: 'E45',catching: 'E40'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーD','粘り打ち','バント○','ヘッドスライディング'],
+    redAbilities: ['チャンスE','対左投手E','送球E','ケガしにくさE','回復E'],
+    advice: '★196。パワーD55・粘り打ち。※キャッチャー適性はD査定。'
+  },
+  '袴田英利': {
+    initialStats: {trajectory: 2,meet: 'D52',power: 'E47',run: 'F27',arm: 'D55',fielding: 'E48',catching: 'E43'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','チャンスB','バント○','ホーム死守','回復C'],
+    redAbilities: [],
+    advice: '【キャッチャーB★202】チャンスB・バント◯・ホーム死守。静岡スタートの貴重なキャッチャーB捕手。'
+  },
+  '坂本誠志郎': {
+    initialStats: {trajectory: 2,meet: 'E44',power: 'E46',run: 'E42',arm: 'E41',fielding: 'E45',catching: 'E43'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','送球B','流し打ち','バント○','満塁男','ホーム死守','対ストレート○','ブロッキング','フレーミング○'],
+    redAbilities: ['対左投手F','チャンスE'],
+    advice: '【キャッチャーB★202】送球B・ホーム死守・ブロッキング・フレーミング◯。大阪スタートの堅守捕手。'
+  },
+  '伊藤光': {
+    initialStats: {trajectory: 3,meet: 'E47',power: 'E44',run: 'E43',arm: 'D55',fielding: 'D51',catching: 'F33'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','バント○','逆境○','対左投手B','走塁B','回復C'],
+    redAbilities: ['チャンスE','エラー','ケガしにくさE'],
+    advice: '★203。対左B・走塁B・逆境◯。※キャッチャー適性はC査定。'
+  },
+  '小林誠司': {
+    initialStats: {trajectory: 2,meet: 'E46',power: 'E46',run: 'F35',arm: 'C65',fielding: 'D51',catching: 'F34'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','流し打ち','満塁男','意外性','送球A'],
+    redAbilities: ['三振','併殺','回復E'],
+    advice: '★204。肩力C65・送球A。※キャッチャー適性はC査定。'
+  },
+  '鶴岡慎也': {
+    initialStats: {trajectory: 2,meet: 'D54',power: 'E42',run: 'E41',arm: 'D52',fielding: 'E49',catching: 'E47'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','チャンスB','バント○','ホーム死守'],
+    redAbilities: [],
+    advice: '★206。チャンスB・ホーム死守。※キャッチャー適性はC査定。'
+  },
+  '梨田昌崇': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'E49',run: 'F37',arm: 'C60',fielding: 'E45',catching: 'F27'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','送球A','対左投手C','ダメ押し'],
+    redAbilities: ['チャンスE','併殺'],
+    advice: '【キャッチャーB★210】強肩C60・送球A所持！島根スタートで谷繁と並ぶ強力捕手。'
+  },
+  '嶋基宏': {
+    initialStats: {trajectory: 2,meet: 'C60',power: 'E45',run: 'E43',arm: 'E45',fielding: 'E49',catching: 'F21'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','流し打ち','内野安打○','満塁男','ホーム死守','ムード○','対左投手B','チャンスC','回復C'],
+    redAbilities: ['三振','併殺','送球E'],
+    advice: '★215。ミートC60にチーム強化の「ムード◯」所持。※キャッチャー適性はC査定。'
+  },
+  '戸郷翔征': {
+    initialStats: {speed: 141,control: 'E41',stamina: 'D52',breakingBalls: 'フォーク2, Vスライダー2'},
+    goldAbilities: [],
+    blueAbilities: ['キレ○','逃げ球','奪三振','球速安定','対ピンチC','打たれ強さC','ノビC','回復C'],
+    redAbilities: ['抜け球'],
+    advice: '【宮崎ラインの一角★215】キレ◯・逃げ球・奪三振・球速安定。フォークと縦スライダーのコンビネーション。'
+  },
+  '中沢伸二': {
+    initialStats: {trajectory: 3,meet: 'D56',power: 'D52',run: 'F27',arm: 'E43',fielding: 'D52',catching: 'E45'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','送球B','ホーム死守'],
+    redAbilities: [],
+    advice: '【キャッチャーB★218】送球B・ミートD56・ホーム死守。山梨スタートの貴重なキャッチャーB捕手。'
+  },
+  '甲斐拓也': {
+    initialStats: {trajectory: 3,meet: 'F39',power: 'E46',run: 'D50',arm: 'C67',fielding: 'D52',catching: 'D50'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーD','バント○','ホーム死守','ケガしにくさB','回復B','送球C'],
+    redAbilities: ['三振'],
+    advice: '【甲斐キャノン★222】肩力C67・ホーム死守・ケガB・回復B。※栄冠ナイン初期はキャッチャーD。'
+  },
+  '有田修三': {
+    initialStats: {trajectory: 3,meet: 'D54',power: 'D54',run: 'F27',arm: 'C60',fielding: 'E47',catching: 'F31'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','ハイボールヒッター','ホーム死守'],
+    redAbilities: [],
+    advice: '【キャッチャーB★226】肩力C60・ハイボールヒッター・ホーム死守。山口スタートの要。'
+  },
+  '相川亮二': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'D56',run: 'F29',arm: 'E45',fielding: 'D50',catching: 'E49'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','チャンスB','ホーム死守'],
+    redAbilities: [],
+    advice: '★234。チャンスB・ホーム死守所持。※キャッチャー適性はC査定。'
+  },
+  '石原慶幸': {
+    initialStats: {trajectory: 3,meet: 'D54',power: 'D55',run: 'E41',arm: 'D52',fielding: 'D51',catching: 'E42'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーD','バント○','フレーミング○'],
+    redAbilities: ['対左投手F'],
+    advice: '通常版★218。※通常版はキャッチャーD。'
+  },
+  '石原慶幸(DLC)': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'D51',run: 'F39',arm: 'D52',fielding: 'E46',catching: 'D59'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','流し打ち','サヨナラ男','意外性','ブロッキング','ケガしにくさC'],
+    redAbilities: ['三振'],
+    advice: '【DLC版はキャッチャーB★235】ブロッキング・流し打ち・意外性。岐阜スタートでの優秀な捕手選択肢。'
+  },
+  '岡村浩二': {
+    initialStats: {trajectory: 3,meet: 'D54',power: 'E49',run: 'F31',arm: 'D57',fielding: 'D57',catching: 'F31'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','チャンスB','送球B','ホーム死守','ケガしにくさC','回復C'],
+    redAbilities: [],
+    advice: '【キャッチャーB★236】チャンスB・送球B・ホーム死守所持。香川スタートの頼れる司令塔。'
+  },
+  '中村悠平': {
+    initialStats: {trajectory: 2,meet: 'D52',power: 'D52',run: 'E42',arm: 'C60',fielding: 'E48',catching: 'D52'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','走塁C','流し打ち','バント職人','満塁男','ホーム死守'],
+    redAbilities: ['チャンスF','対左投手E','併殺'],
+    advice: '【キャッチャーB★237】肩力C60・キャッチャーB・流し打ち・バント職人。福井スタートの貴重な捕手戦力。'
+  },
+  '佐藤都志也': {
+    initialStats: {trajectory: 3,meet: 'E45',power: 'E49',run: 'D53',arm: 'C60',fielding: 'D52',catching: 'F33'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーD','粘り打ち','バント○','サヨナラ男','高速チャージ','対ストレート○','マルチ弾','対左投手C'],
+    redAbilities: ['送球E','併殺'],
+    advice: '★240。走力D53・肩力C60。※キャッチャー適性はD査定。'
+  },
+  '伊東勤': {
+    initialStats: {trajectory: 3,meet: 'E46',power: 'E47',run: 'E42',arm: 'E44',fielding: 'C61',catching: 'C64'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーA','バント○','満塁男','逆境○','守備職人','対左投手C','回復C'],
+    redAbilities: ['チャンスE'],
+    advice: '【西武黄金期の正捕手★249】貴重な「キャッチャーA」所持！守備C61・捕球C64・守備職人。埼玉スタートで狙える名捕手。'
+  },
+  '千賀滉大(DLC)': {
+    initialStats: {speed: 148,control: 'F35',stamina: 'C62',breakingBalls: 'カットボール2, フォーク3'},
+    goldAbilities: [],
+    blueAbilities: ['キレ○','逃げ球','奪三振','球速安定'],
+    redAbilities: ['対左打者F','抜け球'],
+    advice: 'DLC版★251。148km速球とお化けフォーク3・キレ◯・逃げ球・奪三振。'
+  },
+  '若月健矢': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'E46',run: 'F35',arm: 'C63',fielding: 'E47',catching: 'D56'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','対左投手B','ハイボールヒッター','ホーム死守','ブロッキング','フレーミング○','サヨナラ男'],
+    redAbilities: ['エラー','併殺'],
+    advice: '通常版★256。肩力C63・ミートD52・対左B。※キャッチャー適性はC査定。'
+  },
+  '若月健矢(DLC)': {
+    initialStats: {trajectory: 3,meet: 'E43',power: 'E46',run: 'F35',arm: 'C63',fielding: 'E47',catching: 'D56'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','対左投手B','ハイボールヒッター','ホーム死守','ブロッキング','フレーミング○','サヨナラ男'],
+    redAbilities: ['エラー','併殺'],
+    advice: 'DLC版★235。肩力C63・対左B・フレーミング◯。※キャッチャー適性はC査定。'
+  },
+  '矢野燿大': {
+    initialStats: {trajectory: 3,meet: 'C63',power: 'E47',run: 'E42',arm: 'E45',fielding: 'D52',catching: 'E47'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','広角打法','粘り打ち','初球○','サヨナラ男','チャンスC'],
+    redAbilities: [],
+    advice: '【キャッチャーB★261】ミートC63・広角打法・粘り打ち・初球◯。大阪リセマラで投手を支える好捕手。'
+  },
+  '福留孝介': {
+    initialStats: {trajectory: 3,meet: 'E46',power: 'D56',run: 'D56',arm: 'D57',fielding: 'C62',catching: 'C61'},
+    goldAbilities: [],
+    blueAbilities: ['内野安打○','代打○','レーザービーム','インコースヒッター','ラインドライブ','決勝打','送球A','走塁B','回復B'],
+    redAbilities: ['盗塁F','三振'],
+    advice: '通常版★287。守備力C62・捕球C61・送球A・レーザービームで外野の守備力抜群。'
+  },
+  '平良海馬': {
+    initialStats: {speed: 150,control: 'E42',stamina: 'D59',breakingBalls: 'カットボール2, スラーブ2, Hシンカー2'},
+    goldAbilities: [],
+    blueAbilities: ['逃げ球','奪三振','リリース○','打球反応○','真っスラ','打たれ強さB','ノビB','クイックB','回復B','対ピンチC'],
+    redAbilities: ['抜け球'],
+    advice: '【剛腕リリーバー★312】150km速球にノビB・クイックB・打たれ強さB・逃げ球・奪三振。沖縄スタートの強力ピース。'
+  },
+  '佐藤輝明': {
+    initialStats: {trajectory: 4,meet: 'E47',power: 'C66',run: 'D50',arm: 'D52',fielding: 'E45',catching: 'E40'},
+    goldAbilities: [],
+    blueAbilities: ['パワーヒッター','広角打法','初球○','逆境○','決勝打','マルチ弾','存在感','サヨナラ男','回復B','対左投手C','盗塁C','走塁C','送球C'],
+    redAbilities: ['三振'],
+    advice: '通常版★317。弾道4・パワーC66にパワーヒッター・広角打法。長打力は折り紙付き。'
+  },
+  '佐藤輝明(DLC)': {
+    initialStats: {trajectory: 4,meet: 'D52',power: 'C67',run: 'D50',arm: 'D52',fielding: 'E45',catching: 'E40'},
+    goldAbilities: [],
+    blueAbilities: ['パワーヒッター','広角打法','初球○','逆境○','決勝打','マルチ弾','存在感','サヨナラ男','回復B','対左投手C','盗塁C','走塁C','送球C'],
+    redAbilities: ['三振'],
+    advice: 'DLC版★323。弾道4・パワーC67・パワーヒッター・広角打法・サヨナラ男・存在感。'
+  },
   // === 投手 ===
-  '大谷翔平(DLC)': {
-    initialStats: { speed: 144, control: 'F38', stamina: 'D54', breakingBalls: 'スライダー3, SFF3', trajectory: 3, meet: 'D52', power: 'C68', run: 'C66', arm: 'A80', fielding: 'E47', catching: 'E40' },
+    '大谷翔平(DLC)': {
+    initialStats: {speed: 151,control: 'E44',stamina: 'C67',breakingBalls: 'スライダー3, スローカーブ2, フォーク2'},
     goldAbilities: [],
-    blueAbilities: ['二刀流', '奪三振', 'ノビB', '球持ち○', 'パワーヒッター', '広角打法'],
-    redAbilities: ['三振(打者時)'],
-    advice: '投打両面で1年目から圧倒的。スタミナ回復アイテムや伝令を併用してフル回転させましょう。'
-  },
-  '大谷翔平': {
-    initialStats: { speed: 142, control: 'F37', stamina: 'D52', breakingBalls: 'スライダー3, SFF2', trajectory: 3, meet: 'D50', power: 'C66', run: 'C65', arm: 'B78', fielding: 'E46', catching: 'F38' },
-    goldAbilities: [],
-    blueAbilities: ['二刀流', '奪三振', 'ノビB', 'パワーヒッター', '広角打法'],
-    redAbilities: ['三振(打者時)'],
-    advice: 'エース兼主砲としてチームを牽引可能。1年生から夏の予選で登板させ経験点を稼ぎましょう。'
-  },
-  'ダルビッシュ有(DLC)': {
-    initialStats: { speed: 142, control: 'E46', stamina: 'C62', breakingBalls: 'スライダー3, カーブ2, フォーク3' },
-    goldAbilities: [],
-    blueAbilities: ['キレ○', '奪三振', 'ノビA', '回復A', '尻上がり', '闘志'],
-    redAbilities: ['スロースターター'],
-    advice: '序盤（1〜2回）の失点に注意。立ち上がりを伝令「励ます」や指示で乗り切れば完投ペースに。'
-  },
-  'ダルビッシュ有': {
-    initialStats: { speed: 141, control: 'E44', stamina: 'C60', breakingBalls: 'スライダー3, カーブ2, フォーク3' },
-    goldAbilities: [],
-    blueAbilities: ['キレ○', '奪三振', 'ノビA', '回復A', '尻上がり', '闘志'],
-    redAbilities: ['スロースターター'],
-    advice: '序盤（1〜2回）の失点に注意。立ち上がりを伝令「励ます」や指示で乗り切れば完投ペースに。'
-  },
-  '田中将大(DLC)': {
-    initialStats: { speed: 142, control: 'E48', stamina: 'C64', breakingBalls: '高速スライダー4, SFF4' },
-    goldAbilities: ['勝利の星'],
-    blueAbilities: ['奪三振', 'キレ○', '闘志', '対ピンチB', '打たれ強さA'],
+    blueAbilities: ['逃げ球','尻上がり','奪三振','球速安定','投打躍動','存在感','打たれ強さB','対ピンチC','ノビC','クイックC','ケガしにくさC','回復A'],
     redAbilities: [],
-    advice: '金特「勝利の星」持ち。赤特なしで初期から抜群の安定感を誇る高校球界最強ピッチャー。'
+    advice: '【栄冠ナイン2026全選手中最高★446】二刀流の最高峰。151km速球と高スタミナに加え、投打躍動・存在感を完備。岩手県（高校数★3）の勝ちやすさも抜群。'
   },
-  '田中将大': {
-    initialStats: { speed: 141, control: 'E46', stamina: 'C62', breakingBalls: 'スライダー4, SFF3' },
+    '大谷翔平': {
+    initialStats: {speed: 150,control: 'F38',stamina: 'C61',breakingBalls: 'スイーパー3, スローカーブ2, フォーク2, Hシンカー2'},
     goldAbilities: [],
-    blueAbilities: ['奪三振', 'キレ○', '闘志', '対ピンチB', '打たれ強さA'],
-    redAbilities: [],
-    advice: 'ピンチに極めて強く赤特もなし。1年目から絶対的守護神・先発として計算できます。'
+    blueAbilities: ['キレ○','奪三振','投打躍動','存在感','クイックC','回復A'],
+    redAbilities: ['対ピンチE','対左打者E'],
+    advice: '通常版でも★419の圧倒的性能。オリジナル球種「スイーパー」と投打躍動で投打ともに主力を張れる。'
   },
-  '山本由伸': {
-    initialStats: { speed: 143, control: 'D54', stamina: 'C62', breakingBalls: 'カットボール3, カーブ2, SFF3' },
+    'ダルビッシュ有(DLC)': {
+    initialStats: {speed: 144,control: 'D54',stamina: 'B70',breakingBalls: 'ツーシームファスト, カットボール2, スラーブ2, スローカーブ2'},
     goldAbilities: [],
-    blueAbilities: ['ノビA', 'キレ○', '奪三振', '低め○', '対ピンチB'],
+    blueAbilities: ['キレ○','逃げ球','尻上がり','奪三振','リリース○','闘志','球持ち○','存在感','対ピンチB','ノビB','回復B'],
+    redAbilities: ['対左打者E','クイックF'],
+    advice: '【ダルビッシュDLC★342】スタミナB70・ノビB・対ピンチB・キレ◯・奪三振。多彩な変化球で試合を圧倒できる。'
+  },
+    'ダルビッシュ有': {
+    initialStats: {speed: 141,control: 'E49',stamina: 'C67',breakingBalls: 'ツーシームファスト, スライダー2, カーブ2, SFF2'},
+    goldAbilities: [],
+    blueAbilities: ['奪三振','リリース○','闘志','球持ち○','存在感','ノビB','回復B'],
+    redAbilities: ['対ランナー','クイックF','打たれ強さF','対ピンチE','対左打者E'],
+    advice: '通常版★266。赤特が多めながらノビB・奪三振・闘志・スタミナC67を持ち、特訓や本で化ける大器。'
+  },
+    '田中将大(DLC)': {
+    initialStats: {speed: 144,control: 'C63',stamina: 'C69',breakingBalls: 'シンキングツーシーム2, Hスライダー3, SFF3'},
+    goldAbilities: ['威圧感','勝利の星','ギアチェンジ'],
+    blueAbilities: ['キレ○','逃げ球','尻上がり','奪三振','牽制○','打球反応○','闘志','要所○','対ピンチB','打たれ強さB','ノビC','回復C','ケガしにくさC'],
     redAbilities: [],
-    advice: '直球・変化球・制球の三拍子が揃う現代最強エース。低め中心の配球指示が特効。'
+    advice: '【投手★417の神の子】金特3種（威圧感・勝利の星・ギアチェンジ）所持！多彩な変化球と抜群の制球力で1年目から絶対的エースになれる。'
+  },
+    '田中将大': {
+    initialStats: {speed: 143,control: 'D59',stamina: 'C67',breakingBalls: 'シンキングツーシーム2, Hスライダー2, SFF2'},
+    goldAbilities: [],
+    blueAbilities: ['逃げ球','奪三振','牽制○','打球反応○','闘志','対ピンチC','打たれ強さC','ノビC','回復C'],
+    redAbilities: ['クイックE'],
+    advice: '通常版でも★309のハイレベル。キレのある変化球と奪三振・闘志で甲子園優勝を狙える即戦力。'
+  },
+    '山本由伸': {
+    initialStats: {speed: 146,control: 'D52',stamina: 'C64',breakingBalls: 'カットボール2, ドロップカーブ2, SFF3'},
+    goldAbilities: [],
+    blueAbilities: ['キレ○','逃げ球','奪三振','リリース○','打球反応○','球持ち○','球速安定','内角攻め','打たれ強さB','ノビC','クイックC','回復B'],
+    redAbilities: [],
+    advice: '【現代最強投手★332】146km速球とSFF3、キレ◯・逃げ球・奪三振・球速安定・内角攻め。宮崎県スタート時の大本命。'
   },
   '佐々木朗希': {
     initialStats: { speed: 146, control: 'F36', stamina: 'E45', breakingBalls: 'フォーク4, スライダー2' },
@@ -164,33 +369,33 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: ['ケガしにくさE', '回復E'],
     advice: '豪速球とフォークは圧巻ですが、ケガ・回復Eのため連投は厳禁。休養マスや控え投手を活用。'
   },
-  '松坂大輔': {
-    initialStats: { speed: 144, control: 'E44', stamina: 'B70', breakingBalls: '高速スライダー4, カーブ2, チェンジアップ2' },
+    '松坂大輔': {
+    initialStats: {speed: 143,control: 'E46',stamina: 'C69',breakingBalls: 'Hスライダー2, Vスライダー2, サークルチェンジ2'},
     goldAbilities: [],
-    blueAbilities: ['奪三振', 'キレ○', '対ピンチA', '尻上がり', '闘志'],
-    redAbilities: ['四球'],
-    advice: '怪物級のスタミナと奪三振力。四球赤特があるため、カウントを悪くした際の甘い球に注意。'
-  },
-  '江川卓': {
-    initialStats: { speed: 145, control: 'D56', stamina: 'B72', breakingBalls: 'カーブ4' },
-    goldAbilities: ['怪童'],
-    blueAbilities: ['奪三振', '重い球', '尻上がり'],
+    blueAbilities: ['キレ○','尻上がり','奪三振','打球反応○','勝ち運','存在感','ゴロピッチャー','ノビB','クイックB','回復B','対ピンチC','打たれ強さC','ケガしにくさC'],
     redAbilities: [],
-    advice: '金特「怪童」持ち。浮き上がる剛速球で三振の山を築きます。'
+    advice: '【平成の怪物★321】ノビB・クイックB・スタミナC69・奪三振・勝ち運。勝負強さとタフさを併せ持つ甲子園の申し子。'
   },
-  '藤川球児(DLC)': {
-    initialStats: { speed: 143, control: 'E47', stamina: 'E45', breakingBalls: 'フォーク4, カーブ1' },
+    '江川卓': {
+    initialStats: {speed: 145,control: 'C63',stamina: 'C68',breakingBalls: 'ドロップカーブ3, カーブ2'},
     goldAbilities: ['怪童'],
-    blueAbilities: ['奪三振', 'キレ○'],
-    redAbilities: [],
-    advice: '金特「怪童」持ち。終盤のピンチや最終回に登板させて反撃を断ちましょう。'
+    blueAbilities: ['奪三振','緩急○','対強打者○','要所○','フライボールピッチャー','対ピンチA','打たれ強さB','回復C'],
+    redAbilities: ['ケガしにくさE','クイックE'],
+    advice: '【昭和の怪物★343】金特「怪童」所持。145km速球に対ピンチA・打たれ強さB・コントロールC63。栃木県スタートの最有力候補。'
   },
-  '藤川球児': {
-    initialStats: { speed: 142, control: 'E46', stamina: 'E45', breakingBalls: 'フォーク4, カーブ1' },
-    goldAbilities: ['怪童'],
-    blueAbilities: ['奪三振', 'キレ○'],
+    '藤川球児(DLC)': {
+    initialStats: {speed: 143,control: 'D52',stamina: 'E49',breakingBalls: 'カーブ2, フォーク3'},
+    goldAbilities: ['怪童','威圧感'],
+    blueAbilities: ['逃げ球','奪三振','球持ち○','回またぎ○','対ピンチB','ケガしにくさB','回復A','対左投手C','打たれ強さC'],
     redAbilities: [],
-    advice: '金特「怪童」持ち。終盤のピンチや最終回に登板させて反撃を断ちましょう。'
+    advice: 'DLC版★310。金特「怪童」「威圧感」のダブル金特。浮き上がる火の玉ストレート。'
+  },
+    '藤川球児': {
+    initialStats: {speed: 143,control: 'D52',stamina: 'E49',breakingBalls: 'カーブ2, フォーク3'},
+    goldAbilities: ['怪童','威圧感'],
+    blueAbilities: ['逃げ球','奪三振','球持ち○','回またぎ○','対ピンチB','ケガしにくさB','回復A','対左投手C','打たれ強さC'],
+    redAbilities: [],
+    advice: '通常版★307。通常版でも金特「怪童」「威圧感」所持！圧倒的な守護神。'
   },
   '佐々木主浩': {
     initialStats: { speed: 141, control: 'E46', stamina: 'E40', breakingBalls: 'フォーク5' },
@@ -199,12 +404,12 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: '落差MAXのフォークと威圧感。最終回のストッパーとして無類の強さを誇ります。'
   },
-  '千賀滉大': {
-    initialStats: { speed: 144, control: 'F38', stamina: 'C60', breakingBalls: 'フォーク4, スライダー2' },
+    '千賀滉大': {
+    initialStats: {speed: 143,control: 'E45',stamina: 'D54',breakingBalls: 'カットボール2, フォーク3'},
     goldAbilities: [],
-    blueAbilities: ['奪三振', 'ノビB', '逃げ球'],
-    redAbilities: ['四球'],
-    advice: 'お化けフォークで空振りを奪える。四球が出やすいため、伝令でコントロールを補うと吉。'
+    blueAbilities: ['キレ○','奪三振','球速安定'],
+    redAbilities: ['対左打者F','抜け球'],
+    advice: '通常版★219。キレ◯・奪三振・球速安定。フォークの変化量3。'
   },
   '桑田真澄': {
     initialStats: { speed: 138, control: 'C64', stamina: 'C60', breakingBalls: 'カーブ4, スライダー2, SFF2' },
@@ -213,54 +418,54 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: '制球力Bと多彩な変化球で失点が極小。打撃能力も高いため下位打線のポイントゲッターに。'
   },
-  '黒田博樹': {
-    initialStats: { speed: 140, control: 'D54', stamina: 'C65', breakingBalls: 'ツーシーム3, スライダー3, フォーク2' },
+    '黒田博樹': {
+    initialStats: {speed: 144,control: 'C62',stamina: 'C65',breakingBalls: 'ツーシームファスト, スライダー2, SFF2'},
     goldAbilities: [],
-    blueAbilities: ['打たれ強さA', '対ピンチB', '闘志', 'ゴロピッチャー'],
+    blueAbilities: ['逃げ球','牽制○','リリース○','打球反応○','低め○','対ランナー○','存在感','ゴロピッチャー','打たれ強さB','ケガしにくさB','クイックB','対ピンチC'],
     redAbilities: [],
-    advice: '動く球で打たせて取るタフネス右腕。守備陣の捕球・守備力を高めておくと無失点に抑えます。'
+    advice: '【男気右腕★343】制球C62・スタミナC65に低め◯・打たれ強さB・ゴロピッチャー。安定感抜群の投球が魅力。'
   },
-  '前田健太': {
-    initialStats: { speed: 139, control: 'D56', stamina: 'C62', breakingBalls: 'スライダー4, チェンジアップ2, カーブ2' },
+    '前田健太': {
+    initialStats: {speed: 141,control: 'D55',stamina: 'C68',breakingBalls: 'シンキングツーシーム2, スライダー2, スローカーブ2, サークルチェンジ2'},
     goldAbilities: [],
-    blueAbilities: ['キレ○', '低め○', '尻上がり', '打たれ強さB'],
-    redAbilities: [],
-    advice: '安定感抜群のマエケンスライダー。イニングが進むほど能力が上がる尻上がり持ち。'
+    blueAbilities: ['キレ○','逃げ球','奪三振','牽制○','打球反応○','球持ち○','緩急○','対ピンチB','クイックC'],
+    redAbilities: ['対左打者E','打たれ強さE','ノビE'],
+    advice: '【マエケン★305】4球種とキレ◯・逃げ球・奪三振・緩急◯・対ピンチBの本格派。打撃力も高い。'
   },
-  '江夏豊': {
-    initialStats: { speed: 141, control: 'C62', stamina: 'B72', breakingBalls: 'カーブ4, スライダー3' },
+    '江夏豊': {
+    initialStats: {speed: 143,control: 'D58',stamina: 'B70',breakingBalls: 'パワーカーブ4, カーブ3'},
     goldAbilities: ['怪童'],
-    blueAbilities: ['奪三振', 'キレ○', '尻上がり', '対ピンチB'],
+    blueAbilities: ['重い球','奪三振','クロスファイヤー','球持ち○','対強打者○','球速安定','内角攻め','要所○','存在感','対ピンチB','対左打者B','打たれ強さB','ケガしにくさB','回復B'],
     redAbilities: [],
-    advice: '金特「怪童」所持の伝説の左腕。驚異的な奪三振率で相手打線をねじ伏せます。'
+    advice: '【奪三振王★382】金特「怪童」所持。パワーカーブ変化量4と対ピンチB・対左B・重い球・奪三振など圧倒的な青特群。'
   },
-  '稲尾和久': {
-    initialStats: { speed: 140, control: 'B72', stamina: 'A80', breakingBalls: 'スライダー4, シュート3' },
-    goldAbilities: ['鉄腕'],
-    blueAbilities: ['キレ○', '奪三振', '尻上がり', '低め○'],
-    redAbilities: [],
-    advice: '金特「鉄腕」所持。神様仏様稲尾様。無尽蔵のスタミナと針の穴を通す制球力。'
+    '稲尾和久': {
+    initialStats: {speed: 135,control: 'D58',stamina: 'B70',breakingBalls: 'シンキングツーシーム2, Hスライダー2'},
+    goldAbilities: ['ガソリンタンク','威圧感','鉄腕'],
+    blueAbilities: ['キレ○','逃げ球','奪三振','リリース○','緊急登板○','球速安定','内角攻め','回またぎ○','ゴロピッチャー','対ピンチA','ノビB','クイックB','ケガしにくさA'],
+    redAbilities: ['対左打者E'],
+    advice: '【鉄腕・神様仏様稲尾様★366】金特3種（ガソリンタンク・威圧感・鉄腕）所持！スタミナB70・対ピンチA・ノビB。大分県の勝ちやすさと相まって最初の1年に最適。'
   },
-  '別所昭': {
-    initialStats: { speed: 141, control: 'C66', stamina: 'B75', breakingBalls: 'ドロップ4, スライダー2' },
+    '別所昭': {
+    initialStats: {speed: 138,control: 'D52',stamina: 'B70',breakingBalls: 'ドロップカーブ3, カーブ2, シンカー3'},
     goldAbilities: ['鉄人'],
-    blueAbilities: ['奪三振', '打たれ強さA', '尻上がり'],
+    blueAbilities: ['重い球','闘志','根性○','ナチュラルシュート','投打躍動','存在感','対ピンチB','ノビB','回復A'],
     redAbilities: [],
-    advice: '金特「鉄人」所持。連投に耐えるタフネスエース。'
+    advice: '【昭和の鉄腕★384】金特「鉄人」所持。スタミナB70・回復A・根性◯・投打躍動で連投に極めて強い大エース。'
   },
-  '金田正一': {
-    initialStats: { speed: 145, control: 'D56', stamina: 'A80', breakingBalls: 'ドロップ5, カーブ2' },
-    goldAbilities: ['闘魂'],
-    blueAbilities: ['ノビA', '奪三振', '重い球', '尻上がり'],
+    '金田正一': {
+    initialStats: {speed: 145,control: 'D52',stamina: 'B70',breakingBalls: 'ドロップカーブ4, カーブ3'},
+    goldAbilities: ['怪童','闘魂'],
+    blueAbilities: ['キレ○','逃げ球','奪三振','緩急○','対強打者○','ナチュラルシュート','要所○','回復B'],
     redAbilities: [],
-    advice: '金特「闘魂」所持。400勝投手の威容。剛速球と大きな縦割れドロップで圧倒。'
+    advice: '【400勝投手★349】金特「怪童」「闘魂」所持。ドロップカーブ4、スタミナB70・球速145km。「金田(1949)→小山(1950)→野村(1951)」黄金リレーの起点。'
   },
-  '小山正明': {
-    initialStats: { speed: 138, control: 'A82', stamina: 'B72', breakingBalls: 'パーム4, カーブ2' },
+    '小山正明': {
+    initialStats: {speed: 139,control: 'B70',stamina: 'B70',breakingBalls: 'パーム4, カーブ3, スライダー2'},
     goldAbilities: ['精密機械'],
-    blueAbilities: ['キレ○', '奪三振', '尻上がり', 'ポーカーフェイス'],
+    blueAbilities: ['尻上がり','存在感','ストライク先行','ノビB','ケガしにくさA','回復B'],
     redAbilities: [],
-    advice: '金特「精密機械」所持。精密機械の異名通り、四球とは無縁の圧倒的制球力。'
+    advice: '【投げる精密機械★340】金特「精密機械」所持！入学時からコントロールB70・スタミナB70・ノビB。パーム4で三振の山を築く。'
   },
   '鈴木啓示': {
     initialStats: { speed: 139, control: 'C66', stamina: 'B75', breakingBalls: 'カーブ4, スライダー2' },
@@ -348,169 +553,168 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
   },
 
   // === 捕手 (キャッチャーA/B & 金特) ===
-  '古田敦也': {
-    initialStats: { trajectory: 3, meet: 'D53', power: 'D56', run: 'D50', arm: 'A80', fielding: 'B74', catching: 'C64' },
+    '古田敦也': {
+    initialStats: {trajectory: 3,meet: 'C61',power: 'D58',run: 'E48',arm: 'C69',fielding: 'C63',catching: 'D55'},
     goldAbilities: ['球界の頭脳'],
-    blueAbilities: ['送球A', 'アベレージヒッター', '守備職人', '流し打ち'], // キャッチャーAは除外（※ささやき戦術は野村克也固有のため未所持）
-    redAbilities: [],
-    advice: '【栄冠ナイン歴代最強捕手】金特「球界の頭脳」所持。全投手の制球+15・スタミナ消費-15・相手打力低下。最優先リセマラ対象！'
+    blueAbilities: ['送球A','アベレージヒッター','プルヒッター','流し打ち','逆境○','守備職人','ホーム死守','ムード○','インコースヒッター','存在感','ブロッキング','フレーミング◎','回復B'],
+    redAbilities: ['併殺'],
+    advice: '【栄冠ナイン歴代最強捕手★392】金特「球界の頭脳」所持。投手陣の制球+15・スタミナ消費-15。入学時からミートC・肩力C・守備C、ムード◯、守備職人、フレーミング◎まで所持する完全無欠の扇の要。'
   },
-  '野村克也': {
-    initialStats: { trajectory: 4, meet: 'C60', power: 'B70', run: 'E40', arm: 'B72', fielding: 'C64', catching: 'C62' },
-    goldAbilities: ['球界の頭脳', 'ささやき戦術'],
-    blueAbilities: ['パワーヒッター', '広角打法', 'チャンスA'], // キャッチャーAは除外
-    redAbilities: ['走塁E'],
-    advice: '金特「球界の頭脳」「ささやき戦術」と長打力を併せ持つ球界のレジェンド。4番捕手としてチームの中心に。'
+    '野村克也': {
+    initialStats: {trajectory: 4,meet: 'D50',power: 'B70',run: 'F25',arm: 'E45',fielding: 'E49',catching: 'D52'},
+    goldAbilities: ['球界の頭脳','ささやき戦術','威圧感'],
+    blueAbilities: ['パワーヒッター','満塁男','逆境○','ホーム死守','サヨナラ男','送球A','チャンスB','回復A','ケガしにくさB'],
+    redAbilities: ['三振','併殺'],
+    advice: '【古田を超えるトリプル金特捕手★344】金特「球界の頭脳」「ささやき戦術」「威圧感」を同時所持！相手打者の能力を削り味方投手を強化する栄冠ナイン最強捕手。'
   },
-  '田淵幸一': {
-    initialStats: { trajectory: 4, meet: 'D52', power: 'B72', run: 'F36', arm: 'B74', fielding: 'D57', catching: 'D52' },
-    goldAbilities: ['アーチスト'],
-    blueAbilities: ['キャッチャーB', 'サヨナラ男', 'プルヒッター'], // パワーヒッターは除外
-    redAbilities: ['走塁F'],
-    advice: '金特「アーチスト」所持。ホームランアーチを架ける強打の正捕手。'
+    '田淵幸一': {
+    initialStats: {trajectory: 4,meet: 'D53',power: 'B70',run: 'F23',arm: 'C65',fielding: 'D51',catching: 'F38'},
+    goldAbilities: ['威圧感','アーチスト'],
+    blueAbilities: ['キャッチャーD','プルヒッター','サヨナラ男','逆境○','ローボールヒッター','ホーム死守','ムード○','対ストレート○','決勝打','マルチ弾','送球A','回復A','対左投手B'],
+    redAbilities: ['チャンスE','ケガしにくさF','併殺'],
+    advice: '【長打力特化捕手★365】金特「アーチスト」「威圧感」所持。パワーB70の破壊力。※キャッチャー適性はD査定。'
   },
-  '城島健司(DLC)': {
-    initialStats: { trajectory: 4, meet: 'D52', power: 'C68', run: 'E45', arm: 'A82', fielding: 'C64', catching: 'D56' },
+    '城島健司(DLC)': {
+    initialStats: {trajectory: 4,meet: 'C63',power: 'C62',run: 'F38',arm: 'C63',fielding: 'D52',catching: 'E41'},
     goldAbilities: ['バズーカ送球'],
-    blueAbilities: ['キャッチャーB', 'パワーヒッター', '逆境○'], // 送球Aは除外
-    redAbilities: [],
-    advice: '金特「バズーカ送球」所持。相手の盗塁を完全シャットアウトする強肩強打捕手。'
+    blueAbilities: ['キャッチャーC','送球B','プルヒッター','固め打ち','初球○','ホーム死守','インコースヒッター','存在感','悪球打ち','回復B'],
+    redAbilities: ['チャンスE','対左投手F','併殺'],
+    advice: '【強肩強打捕手★324】金特「バズーカ送球」所持！弾道4・ミートC63・パワーC62・肩力C63。※キャッチャー適性はC査定。'
   },
-  '城島健司': {
-    initialStats: { trajectory: 4, meet: 'D50', power: 'C66', run: 'E45', arm: 'A80', fielding: 'C62', catching: 'D54' },
+    '城島健司': {
+    initialStats: {trajectory: 3,meet: 'E46',power: 'D56',run: 'F31',arm: 'D56',fielding: 'E45',catching: 'E44'},
     goldAbilities: [],
-    blueAbilities: ['キャッチャーB', '強肩', 'パワーヒッター', '逆境○'],
-    redAbilities: [],
-    advice: '強肩A88で相手の盗塁を完全阻止。打力もパワーAでクリーンナップを打てます。'
+    blueAbilities: ['キャッチャーD','送球B','プルヒッター','固め打ち','ホーム死守','インコースヒッター','存在感','満塁男','悪球打ち'],
+    redAbilities: ['対左投手E','走塁E','併殺'],
+    advice: '通常版★237。送球B・プルヒッター・固め打ち。※通常版はキャッチャーD。'
   },
-  '阿部慎之助(DLC)': {
-    initialStats: { trajectory: 4, meet: 'D50', power: 'C69', run: 'F38', arm: 'B74', fielding: 'D57', catching: 'D54' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーB', 'パワーヒッター', 'プルヒッター', 'サヨナラ男', '逆境○'],
-    redAbilities: ['走塁E'],
-    advice: '左のスラッガー捕手。長打力とリードを両立し、勝負強さも抜群。'
+    '阿部慎之助(DLC)': {
+    initialStats: {trajectory: 4,meet: 'D58',power: 'C60',run: 'G19',arm: 'D53',fielding: 'E49',catching: 'F37'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['キャッチャーB','対左投手C','送球C','回復B','プルヒッター','流し打ち','固め打ち','ハイボールヒッター','カット打ち','マルチ弾'],
+    redAbilities: ['ケガしにくさE'],
+    advice: '【強打の要★302】金特「威圧感」と「キャッチャーB」を併せ持つスラッガー捕手。弾道4・パワーC60。'
   },
-  '阿部慎之助': {
-    initialStats: { trajectory: 4, meet: 'E48', power: 'C68', run: 'F38', arm: 'B74', fielding: 'D57', catching: 'D52' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーB', 'パワーヒッター', 'プルヒッター', 'サヨナラ男'],
-    redAbilities: ['走塁E'],
-    advice: '左のスラッガー捕手。長打力とリードを両立し、勝負強さも抜群。'
+    '阿部慎之助': {
+    initialStats: {trajectory: 4,meet: 'D58',power: 'C60',run: 'G19',arm: 'D53',fielding: 'E49',catching: 'F37'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['キャッチャーB','対左投手C','送球C','回復B','プルヒッター','流し打ち','固め打ち','ハイボールヒッター','カット打ち','マルチ弾'],
+    redAbilities: ['ケガしにくさE'],
+    advice: '通常版★309。金特「威圧感」＋「キャッチャーB」所持。東京地区の強力な捕手候補。'
   },
-  '谷繁元信(DLC)': {
-    initialStats: { trajectory: 2, meet: 'E44', power: 'D50', run: 'E40', arm: 'B78', fielding: 'B74', catching: 'C64' },
+    '谷繁元信(DLC)': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'D52',run: 'F28',arm: 'D50',fielding: 'D59',catching: 'D57'},
     goldAbilities: ['精神的支柱'],
-    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'ホーム死守', 'ケガしにくさB'],
+    blueAbilities: ['キャッチャーA','ケガしにくさB','送球B','ホーム死守','ブロッキング'],
+    redAbilities: ['回復E'],
+    advice: '【DLC版は金特＋キャッチャーA★268】金特「精神的支柱」と「キャッチャーA」を併せ持ち、島根スタートでの最優秀バッテリーを構築可能。'
+  },
+    '谷繁元信': {
+    initialStats: {trajectory: 3,meet: 'E44',power: 'D52',run: 'F31',arm: 'C60',fielding: 'D56',catching: 'E49'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーB','送球B','プルヒッター','ホーム死守','ブロッキング'],
     redAbilities: ['三振'],
-    advice: '【強力金特バフ＋キャッチャーA】金特「精神的支柱」でチーム全員の能力を底上げしつつ、キャッチャーAで投手を盤石にリード。最優秀バッテリーの核。'
+    advice: '【通常版★236】キャッチャーB・送球B・肩力C60・ホーム死守所持（精神的支柱はDLC版固有）。島根リセマラの堅実な捕手。'
   },
-  '谷繁元信': {
-    initialStats: { trajectory: 2, meet: 'E43', power: 'E49', run: 'E40', arm: 'B77', fielding: 'B72', catching: 'C62' },
-    goldAbilities: ['精神的支柱'],
-    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'ホーム死守', 'ケガしにくさB'],
+    '森昌彦': {
+    initialStats: {trajectory: 3,meet: 'E46',power: 'D55',run: 'F31',arm: 'D56',fielding: 'C62',catching: 'D59'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーA','送球A','ケガしにくさB','回復B','ホーム死守','意外性'],
+    redAbilities: [],
+    advice: '【V9の頭脳★262】貴重な「キャッチャーA」所持捕手！送球A・守備C62・ケガB・回復Bと守備面は完璧。岐阜スタートの要。'
+  },
+    '大矢明彦': {
+    initialStats: {trajectory: 2,meet: 'C60',power: 'D52',run: 'F35',arm: 'C69',fielding: 'D56',catching: 'F34'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーA','チャンスC','回復C'],
+    redAbilities: ['併殺'],
+    advice: '【キャッチャーA★233】貴重な「キャッチャーA」所持！強肩C69・ミートC60。東京スタートで狙える名捕手。'
+  },
+    '伊藤勤': {
+    initialStats: {trajectory: 3,meet: 'E46',power: 'E47',run: 'E42',arm: 'E44',fielding: 'C61',catching: 'C64'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーA','バント○','満塁男','逆境○','守備職人','対左投手C','回復C'],
+    redAbilities: ['チャンスE'],
+    advice: '【西武黄金期の正捕手★249】貴重な「キャッチャーA」所持！守備C61・捕球C64・守備職人。埼玉スタートで狙える名捕手。'
+  },
+    '里崎智也': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'D52',run: 'F34',arm: 'D57',fielding: 'E49',catching: 'C62'},
+    goldAbilities: [],
+    blueAbilities: ['キャッチャーC','広角打法','バント○','満塁男','逆境○','ハイボールヒッター','ホーム死守','意外性','決勝打','ブロッキング','送球B','チャンスC','回復C'],
     redAbilities: ['三振'],
-    advice: '【強力金特バフ＋キャッチャーA】金特「精神的支柱」でチーム全員の能力を底上げしつつ、キャッチャーAで投手を盤石にリード。最優秀バッテリーの核。'
+    advice: '【大舞台男★301】捕球C62・送球B・広角打法・満塁男・意外性。※キャッチャー適性はC査定。'
   },
-  '森昌彦': {
-    initialStats: { trajectory: 2, meet: 'E48', power: 'E44', run: 'E42', arm: 'B76', fielding: 'B74', catching: 'C66' },
+    '森友哉': {
+    initialStats: {trajectory: 3,meet: 'D52',power: 'D56',run: 'E48',arm: 'E49',fielding: 'E45',catching: 'F39'},
     goldAbilities: [],
-    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B'],
-    redAbilities: [],
-    advice: 'V9巨人を支えた名捕手。キャッチャーAで投手力を最大限に引き出します。'
-  },
-  '大矢明彦': {
-    initialStats: { trajectory: 2, meet: 'E40', power: 'E42', run: 'E42', arm: 'B78', fielding: 'B72', catching: 'C62' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーA', '送球A', 'ブロック○'],
-    redAbilities: [],
-    advice: 'キャッチャーA＆送球A。守備面の信頼度が非常に高い正捕手。'
-  },
-  '伊藤勤': {
-    initialStats: { trajectory: 2, meet: 'E42', power: 'E48', run: 'E45', arm: 'B77', fielding: 'B74', catching: 'C64' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーA', '送球A', 'ブロック○'],
-    redAbilities: [],
-    advice: '西武黄金期の頭脳。キャッチャーAと強肩で堅牢な守備陣を築きます。'
-  },
-  '里崎智也': {
-    initialStats: { trajectory: 3, meet: 'E42', power: 'D56', run: 'F38', arm: 'B70', fielding: 'D54', catching: 'D52' },
-    goldAbilities: [],
-    blueAbilities: ['キャッチャーB', '意外性', 'チャンスB'],
-    redAbilities: [],
-    advice: '要所で一発を放つ大舞台の強さ。徳島県からのスタートで手堅いリセマラ候補。'
-  },
-  '森友哉': {
-    initialStats: { trajectory: 3, meet: 'D58', power: 'C62', run: 'D55', arm: 'C64', fielding: 'E44', catching: 'E42' },
-    goldAbilities: [],
-    blueAbilities: ['アベレージヒッター', '広角打法', '逆境○'],
-    redAbilities: [],
-    advice: '打撃力は全捕手中でも屈指。リード能力は特訓やOBマスでキャッチャーB以上に伸ばすのが理想。'
+    blueAbilities: ['キャッチャーD','サヨナラ男','逆境○','ヘッドスライディング','インコースヒッター','ラインドライブ','満塁男','走塁B','チャンスC','回復C'],
+    redAbilities: ['ケガしにくさE'],
+    advice: '【打撃型捕手★269】ミートD52・パワーD56・インコースヒッター・ラインドライブ。※キャッチャー適性はD査定。'
   },
 
   // === 野手 (一・二・三・遊・外) ===
-  '長嶋茂雄': {
-    initialStats: { trajectory: 3, meet: 'C64', power: 'C60', run: 'C62', arm: 'B70', fielding: 'C67', catching: 'C62' },
-    goldAbilities: [],
-    // ※パワーヒッターは未所持！アベレージヒッター・広角打法・チャンスA等を所持
-    blueAbilities: ['アベレージヒッター', '広角打法', 'チャンスA', 'サヨナラ男', '固め打ち', '初球○', '守備職人'],
-    redAbilities: [],
-    advice: '【ミスタープロ野球】アベレージヒッターと広角打法を併せ持つ打率マスター。得点圏での勝負強さも圧倒的。'
-  },
-  '王貞治(DLC)': {
-    initialStats: { trajectory: 4, meet: 'C66', power: 'B78', run: 'D50', arm: 'C64', fielding: 'C64', catching: 'C66' },
-    goldAbilities: ['アーチスト'],
-    blueAbilities: ['アベレージヒッター', '威圧感', '選球眼', '逆境○', '満塁男'], // パワーヒッターは除外
-    redAbilities: [],
-    advice: '金特「アーチスト」所持。初期から金特「アーチスト」所持。卓越した長打力でスタンドインを連発します。'
-  },
-  '王貞治': {
-    initialStats: { trajectory: 4, meet: 'C64', power: 'B76', run: 'D50', arm: 'C62', fielding: 'C62', catching: 'C64' },
-    goldAbilities: ['アーチスト'],
-    blueAbilities: ['アベレージヒッター', '威圧感', '選球眼', '逆境○'], // パワーヒッターは除外
-    redAbilities: [],
-    advice: '金特「アーチスト」所持。世界の本塁打王。フライ性の当たりがことごとくスタンドインします。'
-  },
-  'イチロー': {
-    initialStats: { trajectory: 2, meet: 'C66', power: 'E49', run: 'B78', arm: 'A84', fielding: 'A82', catching: 'B74' },
-    goldAbilities: ['安打製造機'],
-    blueAbilities: ['広角打法', '守備職人', 'レーザービーム', '走塁A', '盗塁A', 'チャンスメーカー', '内野安打○'], // アベヒは除外
-    redAbilities: [],
-    advice: '【打・走・守の頂点】金特「安打製造機」所持。出塁率・守備範囲・補殺すべてが神レベル。'
-  },
-  '松井秀喜': {
-    initialStats: { trajectory: 4, meet: 'C60', power: 'B72', run: 'D52', arm: 'C68', fielding: 'D52', catching: 'D52' },
-    goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '威圧感', 'チャンスA', '逆境○', 'プルヒッター'],
-    redAbilities: [],
-    advice: '弾道4×高パワーの超ド級スラッガー。得点圏で驚異的な打点力を誇る4番打者。'
-  },
-  '落合博満': {
-    initialStats: { trajectory: 3, meet: 'B70', power: 'C69', run: 'E42', arm: 'D57', fielding: 'D54', catching: 'C62' },
-    goldAbilities: ['勝負師'],
-    blueAbilities: ['アベレージヒッター', '広角打法', 'パワーヒッター', '威圧感', '流し打ち'], // チャンスAは除外
+    '長嶋茂雄': {
+    initialStats: {trajectory: 3,meet: 'C64',power: 'C64',run: 'D58',arm: 'D57',fielding: 'D52',catching: 'E41'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['アベレージヒッター','プルヒッター','流し打ち','粘り打ち','内野安打○','初球○','サヨナラ男','高速チャージ','ラインドライブ','ささやき破り','悪球打ち','走塁A','チャンスB','回復A','ケガしにくさB'],
     redAbilities: ['併殺'],
-    advice: '金特「勝負師」所持。3冠王打法。足は速くないため、ランナー1塁でのゴロ併殺にのみ注意。'
+    advice: '【野手★403・ミスタープロ野球】金特「威圧感」とアベレージヒッター・プルヒッターを所持（パワーヒッターは未所持）。ミートC64＆パワーC64の長打力と走塁A。'
   },
-  '秋山幸二': {
-    initialStats: { trajectory: 4, meet: 'D52', power: 'B70', run: 'B72', arm: 'B77', fielding: 'B76', catching: 'C64' },
-    goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '走塁A', '守備職人', 'レーザービーム'],
-    redAbilities: ['三振'],
-    advice: 'メジャー級の身体能力。パワーA・走力A・守備力Aで走攻守すべてトップクラス。'
-  },
-  '柳田悠岐': {
-    initialStats: { trajectory: 4, meet: 'D53', power: 'B72', run: 'B72', arm: 'B77', fielding: 'D54', catching: 'E47' },
-    goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '初球○', '逆境○', '固め打ち'],
-    redAbilities: ['三振'],
-    advice: 'フルスイングから放たれる圧倒的飛距離。1年目から打線の主軸を担えます。'
-  },
-  '松井稼頭央(DLC)': {
-    initialStats: { trajectory: 3, meet: 'C60', power: 'C66', run: 'A80', arm: 'B76', fielding: 'B72', catching: 'C62' },
-    goldAbilities: ['切り込み隊長'],
-    blueAbilities: ['パワーヒッター', '盗塁A', '走塁A', '守備職人', '送球B'], // チャンスメーカーは除外
+    '王貞治(DLC)': {
+    initialStats: {trajectory: 4,meet: 'C63',power: 'B70',run: 'F38',arm: 'E46',fielding: 'D54',catching: 'D53'},
+    goldAbilities: ['威圧感','アーチスト'],
+    blueAbilities: ['プルヒッター','固め打ち','粘り打ち','初球○','逆境○','高速チャージ','アウトコースヒッター','決勝打','マルチ弾','チャンスB','回復A','ケガしにくさA'],
     redAbilities: [],
-    advice: '金特「切り込み隊長」所持。トリプルスリー遊撃手。先頭打者ホームランも狙えます。'
+    advice: '【世界のホームラン王★400】金特「アーチスト」「威圧感」の超強力コンボ。入学時から弾道4・パワーB70で本塁打を量産。'
+  },
+    '王貞治': {
+    initialStats: {trajectory: 4,meet: 'C67',power: 'C69',run: 'F34',arm: 'E43',fielding: 'D52',catching: 'D52'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['パワーヒッター','プルヒッター','固め打ち','粘り打ち','初球○','逆境○','高速チャージ','アウトコースヒッター','決勝打','マルチ弾','チャンスB','回復A','ケガしにくさA'],
+    redAbilities: [],
+    advice: '通常版でも★391。金特「威圧感」に加えパワーヒッター・プルヒッター・チャンスB完備の不動の4番。'
+  },
+    'イチロー': {
+    initialStats: {trajectory: 3,meet: 'B70',power: 'D53',run: 'C63',arm: 'C67',fielding: 'D57',catching: 'D56'},
+    goldAbilities: ['安打製造機'],
+    blueAbilities: ['流し打ち','固め打ち','粘り打ち','バント職人','内野安打○','チャンスメーカー','ローボールヒッター','レーザービーム','対変化球○','存在感','悪球打ち','送球A','盗塁B','走塁B','ケガしにくさB','回復B'],
+    redAbilities: ['対左投手E'],
+    advice: '【野手最高峰★415】入学時からミートB70＆金特「安打製造機」。レーザービーム・送球A・盗塁B・走塁Bなど走攻守すべてが完成された天才。'
+  },
+    '松井秀喜': {
+    initialStats: {trajectory: 4,meet: 'C65',power: 'B70',run: 'E44',arm: 'D50',fielding: 'E47',catching: 'F39'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['プルヒッター','初球○','逆境○','インコースヒッター','ラインドライブ','対ストレート○','マルチ弾','対左投手C','回復A','ケガしにくさA'],
+    redAbilities: ['盗塁E'],
+    advice: '【ゴジラ★355】金特「威圧感」所持。入学時から弾道4・ミートC65・パワーB70。プルヒッター・初球◯・ラインドライブで本塁打を量産。'
+  },
+    '落合博満': {
+    initialStats: {trajectory: 4,meet: 'C69',power: 'C66',run: 'F35',arm: 'E45',fielding: 'E47',catching: 'F31'},
+    goldAbilities: ['勝負師','威圧感'],
+    blueAbilities: ['アベレージヒッター','パワーヒッター','広角打法','流し打ち','粘り打ち','高速チャージ','インコースヒッター','カット打ち','マルチ弾','ケガしにくさB','回復B'],
+    redAbilities: ['併殺'],
+    advice: '【3冠王★373】金特「勝負師」「威圧感」所持！アベレージヒッター・パワーヒッター・広角打法をすべて兼ね備えた天才打者。'
+  },
+    '秋山幸二': {
+    initialStats: {trajectory: 4,meet: 'D55',power: 'C67',run: 'C66',arm: 'C65',fielding: 'D58',catching: 'D56'},
+    goldAbilities: [],
+    blueAbilities: ['パワーヒッター','プルヒッター','逆境○','レーザービーム','対ストレート○','決勝打','マルチ弾','存在感','盗塁B','送球A','回復B'],
+    redAbilities: ['三振'],
+    advice: '【野手★393の万能戦士】弾道4・走力C66・肩力C65・パワーC67。送球A・レーザービーム・パワーヒッターを備えた外野の超大型核。'
+  },
+    '柳田悠岐': {
+    initialStats: {trajectory: 4,meet: 'C67',power: 'C69',run: 'C60',arm: 'C63',fielding: 'E46',catching: 'F27'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['固め打ち','内野安打○','サヨナラ男','ハイボールヒッター','レーザービーム','ラインドライブ','チャンスB','盗塁B','走塁B'],
+    redAbilities: [],
+    advice: '【ギータ★381】金特「威圧感」と弾道4・ミートC67・パワーC69・走力C60・肩力C63の超ハイスペック外野手。'
+  },
+    '松井稼頭央(DLC)': {
+    initialStats: {trajectory: 3,meet: 'C63',power: 'C61',run: 'C66',arm: 'C66',fielding: 'D58',catching: 'E46'},
+    goldAbilities: ['切り込み隊長'],
+    blueAbilities: ['アベレージヒッター','広角打法','内野安打○','サヨナラ男','ローボールヒッター','ラインドライブ','対ストレート○','走塁A','盗塁B','ケガしにくさB','回復A'],
+    redAbilities: ['チャンスE','対左投手E','三振'],
+    advice: '【トリプルスリー遊撃手★376】金特「切り込み隊長」所持。ミートC・パワーC・走力C・肩力Cのスイッチヒッター。走塁A・アベレージヒッター・広角打法。'
   },
   '山本浩二(DLC)': {
     initialStats: { trajectory: 4, meet: 'C60', power: 'B70', run: 'C65', arm: 'B74', fielding: 'B74', catching: 'C66' },
@@ -526,12 +730,12 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: '外野手の模範となる完璧なステータス。クリーンナップに最適。'
   },
-  '福留孝介(DLC)': {
-    initialStats: { trajectory: 3, meet: 'C62', power: 'C60', run: 'C62', arm: 'B76', fielding: 'C67', catching: 'C62' },
+    '福留孝介(DLC)': {
+    initialStats: {trajectory: 3,meet: 'D53',power: 'C60',run: 'C60',arm: 'C62',fielding: 'B70',catching: 'B70'},
     goldAbilities: [],
-    blueAbilities: ['アベレージヒッター', '広角打法', '選球眼', 'レーザービーム', '流し打ち'],
+    blueAbilities: ['アベレージヒッター','広角打法','内野安打○','レーザービーム','守備職人','送球A','走塁B','回復B'],
     redAbilities: [],
-    advice: '首位打者の打撃技術と強肩。隙のないオールラウンダー。'
+    advice: 'DLC版★357。走攻守すべて高次元。守備職人・レーザービーム・送球A・広角打法。'
   },
   '金本知憲': {
     initialStats: { trajectory: 4, meet: 'D53', power: 'C68', run: 'C62', arm: 'C62', fielding: 'D57', catching: 'D52' },
@@ -540,26 +744,26 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: '金特「鉄人」所持。アニキの勝負強さとタフネスでチームを鼓舞。'
   },
-  '山田哲人(DLC)': {
-    initialStats: { trajectory: 4, meet: 'D53', power: 'C68', run: 'B74', arm: 'C64', fielding: 'C66', catching: 'D54' },
+    '山田哲人(DLC)': {
+    initialStats: {trajectory: 3,meet: 'D54',power: 'C65',run: 'C60',arm: 'E48',fielding: 'D52',catching: 'D50'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', 'プルヒッター', '盗塁A', '走塁A', '初球○'],
+    blueAbilities: ['プルヒッター','固め打ち','初球○','ハイボールヒッター','ムード○','ダメ押し','盗塁A','走塁B','ケガしにくさB','チャンスC','対左投手C'],
     redAbilities: [],
-    advice: 'トリプルスリー二塁手。パワーAと走力Aを併せ持つ最強セカンド。'
+    advice: 'DLC版★343。トリプルスリーの二塁手。盗塁A・走塁B・パワーC65・ムード◯で打線の核になる。'
   },
-  '山田哲人': {
-    initialStats: { trajectory: 4, meet: 'D52', power: 'C66', run: 'B72', arm: 'C62', fielding: 'C64', catching: 'D52' },
+    '山田哲人': {
+    initialStats: {trajectory: 3,meet: 'D54',power: 'C65',run: 'C60',arm: 'E48',fielding: 'D52',catching: 'D50'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', 'プルヒッター', '盗塁A', '走塁A', '初球○'],
+    blueAbilities: ['プルヒッター','固め打ち','初球○','ハイボールヒッター','ムード○','ダメ押し','盗塁A','走塁B','ケガしにくさB','チャンスC','対左投手C'],
     redAbilities: [],
-    advice: '長打と機動力を兼ね備えた最高峰の二塁手。'
+    advice: '通常版★341。盗塁A・走塁B・パワーC65に加えてチーム全体を強化する「ムード◯」持ち。'
   },
-  '坂本勇人': {
-    initialStats: { trajectory: 3, meet: 'D52', power: 'C60', run: 'C60', arm: 'C66', fielding: 'C64', catching: 'D54' },
+    '坂本勇人': {
+    initialStats: {trajectory: 3,meet: 'C67',power: 'D53',run: 'D55',arm: 'D59',fielding: 'C61',catching: 'E44'},
     goldAbilities: [],
-    blueAbilities: ['広角打法', 'パワーヒッター', '固め打ち', 'チャンスB', '送球B'],
-    redAbilities: [],
-    advice: '打てるショートの最高傑作。守備・走力も高水準で1年生から遊撃手のレギュラー固定可能。'
+    blueAbilities: ['アベレージヒッター','プルヒッター','流し打ち','初球○','満塁男','サヨナラ男','逆境○','守備職人','インコースヒッター','存在感','回復B','盗塁C','走塁C','ケガしにくさC'],
+    redAbilities: ['対左投手F','エラー'],
+    advice: '【名ショート★341】ミートC67・守備C61。アベレージヒッター・プルヒッター・流し打ち・守備職人を完備する遊撃手の最高峰。'
   },
   '張本勲': {
     initialStats: { trajectory: 3, meet: 'B72', power: 'C66', run: 'C62', arm: 'C62', fielding: 'D52', catching: 'D54' },
@@ -575,19 +779,19 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: 'シーズン200安打2回の安打製造職人。出塁率が非常に高い1番打者。'
   },
-  '村上宗隆(DLC)': {
-    initialStats: { trajectory: 4, meet: 'D50', power: 'B72', run: 'D52', arm: 'C68', fielding: 'E46', catching: 'E40' },
-    goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '威圧感', '選球眼'],
-    redAbilities: ['三振', 'エラー'],
-    advice: '村神様。驚異的な本塁打力。守備・捕球の特訓を優先推奨。'
+    '村上宗隆(DLC)': {
+    initialStats: {trajectory: 4,meet: 'D53',power: 'B70',run: 'E47',arm: 'E45',fielding: 'E42',catching: 'F31'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['パワーヒッター','広角打法','サヨナラ男','逆境○','インコースヒッター','対変化球○','決勝打','マルチ弾','満塁男','チャンスC','対左投手C','盗塁C','走塁C','ケガしにくさB','回復B'],
+    redAbilities: ['三振','エラー'],
+    advice: '【村神様DLC★330】金特「威圧感」所持！弾道4・パワーB70・パワーヒッター・広角打法。'
   },
-  '村上宗隆': {
-    initialStats: { trajectory: 4, meet: 'E48', power: 'B70', run: 'D52', arm: 'C66', fielding: 'E44', catching: 'E40' },
+    '村上宗隆': {
+    initialStats: {trajectory: 4,meet: 'E47',power: 'C65',run: 'E47',arm: 'E45',fielding: 'E45',catching: 'F38'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '威圧感', '選球眼'],
-    redAbilities: ['三振', 'エラー'],
-    advice: '日本人シーズン最多本塁打の破壊力。守備と捕球がやや低いため早めの強化を。'
+    blueAbilities: ['パワーヒッター','広角打法','サヨナラ男','逆境○','インコースヒッター','対変化球○','決勝打','満塁男','チャンスC','盗塁C','走塁C','ケガしにくさB','回復B'],
+    redAbilities: ['三振','エラー'],
+    advice: '通常版★293。弾道4・パワーC65にパワーヒッター・広角打法・サヨナラ男。強烈な長打力。'
   },
   '高橋由伸': {
     initialStats: { trajectory: 3, meet: 'C62', power: 'C64', run: 'C62', arm: 'B74', fielding: 'B72', catching: 'C64' },
@@ -617,12 +821,12 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: [],
     advice: 'どんでん。勝負強いバッティングと長打力を持つ名二塁手。'
   },
-  '清原和博': {
-    initialStats: { trajectory: 4, meet: 'D50', power: 'B70', run: 'E45', arm: 'C67', fielding: 'D54', catching: 'D52' },
-    goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '逆境○', '初球○'],
-    redAbilities: [],
-    advice: '甲子園で通算13本塁打を記録した勝負強さ。劣勢でも一撃で試合をひっくり返します。'
+    '清原和博': {
+    initialStats: {trajectory: 4,meet: 'D52',power: 'C63',run: 'E42',arm: 'E42',fielding: 'D52',catching: 'E42'},
+    goldAbilities: ['威圧感'],
+    blueAbilities: ['パワーヒッター','広角打法','逆境○','アウトコースヒッター','サヨナラ男','ケガしにくさB','回復C'],
+    redAbilities: ['チャンスE'],
+    advice: '【甲子園最多本塁打★318】金特「威圧感」所持！弾道4・パワーヒッター・広角打法・サヨナラ男の超高校級スラッガー。'
   },
   '中西太': {
     initialStats: { trajectory: 4, meet: 'D58', power: 'B72', run: 'C60', arm: 'B74', fielding: 'C62', catching: 'D57' },
@@ -638,12 +842,12 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: ['三振'],
     advice: 'フルスイング本塁打とゴールデングラブの好守を併せ持つノリ。'
   },
-  '掛布雅之': {
-    initialStats: { trajectory: 4, meet: 'C60', power: 'C68', run: 'D54', arm: 'C66', fielding: 'C66', catching: 'C62' },
+    '掛布雅之': {
+    initialStats: {trajectory: 4,meet: 'C63',power: 'C69',run: 'F38',arm: 'E46',fielding: 'D52',catching: 'F36'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', 'チャンスA', 'サヨナラ男', '逆境○'],
+    blueAbilities: ['パワーヒッター','広角打法','ムード○','存在感','チャンスB','ケガしにくさB','回復A'],
     redAbilities: [],
-    advice: 'ミスタータイガース。美しい放物線を描く本塁打と驚異の勝負強さ。'
+    advice: '【ミスタータイガース★311】弾道4・パワーC69・パワーヒッター・広角打法に加え、チーム全体を強化する「ムード◯」所持！'
   },
   '若松勉': {
     initialStats: { trajectory: 3, meet: 'C64', power: 'D54', run: 'C62', arm: 'C62', fielding: 'C64', catching: 'C64' },
@@ -687,33 +891,33 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: ['三振'],
     advice: '肩力S94・守備S90のBIGBOSS。外野からの返球で失点を阻止し、意外な場面で一発。'
   },
-  '鈴木誠也(DLC)': {
-    initialStats: { trajectory: 3, meet: 'D54', power: 'C68', run: 'C65', arm: 'B78', fielding: 'C66', catching: 'D56' },
+    '鈴木誠也(DLC)': {
+    initialStats: {trajectory: 4,meet: 'D59',power: 'C64',run: 'D50',arm: 'C65',fielding: 'D52',catching: 'F38'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '送球A', 'チャンスB', '選球眼'],
-    redAbilities: [],
-    advice: '強肩強打の主砲。メジャー仕込みのパンチ力と広角打法。'
+    blueAbilities: ['パワーヒッター','プルヒッター','流し打ち','固め打ち','満塁男','サヨナラ男','ヘッドスライディング','レーザービーム','存在感','対左投手C','送球C','回復C'],
+    redAbilities: ['チャンスE','盗塁E','併殺'],
+    advice: 'DLC版★335。弾道4・肩力C65・パワーC64。パワーヒッター・プルヒッター・流し打ち・レーザービーム完備。'
   },
-  '鈴木誠也': {
-    initialStats: { trajectory: 3, meet: 'D53', power: 'C66', run: 'C64', arm: 'B77', fielding: 'C64', catching: 'D54' },
+    '鈴木誠也': {
+    initialStats: {trajectory: 4,meet: 'D54',power: 'D59',run: 'D52',arm: 'C65',fielding: 'D52',catching: 'F38'},
     goldAbilities: [],
-    blueAbilities: ['パワーヒッター', '広角打法', '送球A', 'チャンスB'],
-    redAbilities: [],
-    advice: '強肩強打のメジャーリーガー。右翼手からのレーザービーム返球で失点を防ぎます。'
+    blueAbilities: ['パワーヒッター','プルヒッター','流し打ち','満塁男','サヨナラ男','ヘッドスライディング','レーザービーム','対左投手C','送球C','回復C'],
+    redAbilities: ['チャンスE','盗塁E','併殺'],
+    advice: '通常版★305。弾道4にパワーヒッター・レーザービーム所持。攻守に高いポテンシャル。'
   },
-  '吉田正尚(DLC)': {
-    initialStats: { trajectory: 3, meet: 'C64', power: 'C62', run: 'D50', arm: 'C64', fielding: 'E47', catching: 'E46' },
+    '吉田正尚(DLC)': {
+    initialStats: {trajectory: 4,meet: 'C63',power: 'D56',run: 'E42',arm: 'F34',fielding: 'E42',catching: 'F38'},
     goldAbilities: [],
-    blueAbilities: ['アベレージヒッター', '広角打法', '選球眼', '固め打ち'],
-    redAbilities: [],
-    advice: 'マッチョマン。三振が極小で四球を選べる最強出塁率スラッガー。'
+    blueAbilities: ['アベレージヒッター','固め打ち','粘り打ち','内野安打○','インコースヒッター','カット打ち','決勝打','マルチ弾','存在感','悪球打ち','回復B'],
+    redAbilities: ['チャンスE','対左投手E'],
+    advice: 'DLC版★304。弾道4・ミートC63にアベレージヒッター・固め打ち・粘り打ち・存在感。'
   },
-  '吉田正尚': {
-    initialStats: { trajectory: 3, meet: 'C63', power: 'C62', run: 'D50', arm: 'C62', fielding: 'E47', catching: 'E44' },
+    '吉田正尚': {
+    initialStats: {trajectory: 4,meet: 'D59',power: 'D58',run: 'E42',arm: 'F31',fielding: 'E41',catching: 'F38'},
     goldAbilities: [],
-    blueAbilities: ['アベレージヒッター', '広角打法', '選球眼', '固め打ち'],
-    redAbilities: [],
-    advice: '福井・敦賀気比の至宝。三振が非常に少なく、四球も選べる高出塁率の最強クラッチヒッター。'
+    blueAbilities: ['アベレージヒッター','固め打ち','粘り打ち','内野安打○','インコースヒッター','カット打ち','存在感','悪球打ち','チャンスC','回復B'],
+    redAbilities: ['対左投手E'],
+    advice: '通常版★290。弾道4にアベレージヒッター・固め打ち・粘り打ち。高打率を残せる天才打者。'
   },
   '衣笠祥雄': {
     initialStats: { trajectory: 3, meet: 'D52', power: 'C66', run: 'C60', arm: 'C68', fielding: 'C64', catching: 'D54' },
@@ -827,12 +1031,12 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
     redAbilities: ['送球E', '併殺'],
     advice: '長打力抜群ですが送球E・併殺持ち。特別指導や公式戦で送球を消去すると一気に化けます。'
   },
-  '川崎宗則': {
-    initialStats: { trajectory: 2, meet: 'D50', power: 'F36', run: 'B72', arm: 'C64', fielding: 'C66', catching: 'C62' },
+    '川崎宗則': {
+    initialStats: {trajectory: 2,meet: 'D56',power: 'E43',run: 'C66',arm: 'E45',fielding: 'C61',catching: 'D52'},
     goldAbilities: [],
-    blueAbilities: ['内野安打○', '守備職人', 'ムード○'],
+    blueAbilities: ['内野安打○','バント職人','流し打ち','粘り打ち','守備職人','走塁B','送球B'],
     redAbilities: [],
-    advice: 'ムード○持ちで味方全員のミート・パワー+5の隠れ神スキル持ち。ベンチにいるだけでも効果大。'
+    advice: '【ムネリン★235】走力C66・守備C61・内野安打◯・守備職人・バント職人。鹿児島スタートのリードオフマン。'
   },
   '岩村明憲': {
     initialStats: { trajectory: 3, meet: 'D50', power: 'C64', run: 'C60', arm: 'C67', fielding: 'D57', catching: 'D52' },

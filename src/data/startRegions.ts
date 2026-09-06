@@ -106,10 +106,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "少 (40〜60校)",
     "schoolCountApprox": 53,
     "pitcherRate": "中",
-    "hasCatcherAB": true,
-    "catchersABNames": [
-      "細川亨(B)"
-    ],
+    "hasCatcherAB": false,
+    "catchersABNames": [],
     "maxOBStars": 341,
     "highlightOB": "坂本勇人(★410), 外崎修汰(★310), 種市篤暉(★310)",
     "summary": "光星学院の天才ショート坂本勇人をリセマラで狙える。高校数も53校と少なめで地方大会突破が安定。",
@@ -167,17 +165,6 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "special": "",
         "isGold": false,
         "catcherGrade": "",
-        "dlc": false
-      },
-      {
-        "name": "細川亨",
-        "stars": 263,
-        "pos": "捕",
-        "highSchool": "青森北",
-        "year": 1995,
-        "special": "キャッチャーB",
-        "isGold": false,
-        "catcherGrade": "B",
         "dlc": false
       }
     ]
@@ -672,7 +659,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "pitcherRate": "中",
     "hasCatcherAB": true,
     "catchersABNames": [
-      "若月健矢(B)"
+      "伊東勤(A)"
     ],
     "maxOBStars": 304,
     "highlightOB": "斎藤雅樹(★304), 鳥谷敬(DLC)(★285), 鳥谷敬(★272)",
@@ -754,6 +741,17 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "isGold": false,
         "catcherGrade": "B",
         "dlc": false
+      },
+      {
+        "name": "伊東勤",
+        "stars": 249,
+        "pos": "捕",
+        "highSchool": "熊谷商",
+        "year": 1978,
+        "special": "キャッチャーA",
+        "isGold": false,
+        "catcherGrade": "A",
+        "dlc": true
       }
     ]
   },
@@ -948,10 +946,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "pitcherRate": "中",
     "hasCatcherAB": true,
     "catchersABNames": [
-      "田淵幸一(B)",
-      "阿部慎之助(DLC)(B)",
-      "阿部慎之助(B)",
-      "大矢明彦(A)"
+      "大矢明彦(A)",
+      "阿部慎之助(B)"
     ],
     "maxOBStars": 400,
     "highlightOB": "王貞治(★440), 清宮幸太郎(★330), 大森剛(★300)",
@@ -987,7 +983,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1962,
         "special": "アーチスト",
         "isGold": true,
-        "catcherGrade": "B",
+        "catcherGrade": "D",
         "dlc": false
       },
       {
@@ -1823,7 +1819,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "hasCatcherAB": true,
     "catchersABNames": [
       "森昌彦(A)",
-      "石原慶幸(B)"
+      "石原慶幸(DLC)(B)"
     ],
     "maxOBStars": 333,
     "highlightOB": "高橋純平(★325), 朝倉健太(★305), 石原慶幸(★280)",
@@ -2292,7 +2288,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "pitcherRate": "高",
     "hasCatcherAB": true,
     "catchersABNames": [
-      "野村克也(頭脳/A)"
+      "野村克也(球界の頭脳/A)"
     ],
     "maxOBStars": 344,
     "highlightOB": "野村克也(★344), 糸井嘉男(DLC)(★316), 衣笠祥雄(★304)",
@@ -2923,7 +2919,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "pitcherRate": "高",
     "hasCatcherAB": true,
     "catchersABNames": [
-      "古田敦也(頭脳/A)"
+      "古田敦也(球界の頭脳/A)"
     ],
     "maxOBStars": 392,
     "highlightOB": "古田敦也(★415), 山田久志(★395), 鈴木啓示(★335)",
@@ -3430,6 +3426,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "hasCatcherAB": true,
     "catchersABNames": [
       "谷繁元信(DLC)(A)",
+      "谷繁元信(B)",
       "梨田昌崇(B)"
     ],
     "maxOBStars": 284,
@@ -3804,10 +3801,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "最少 (20〜40校)",
     "schoolCountApprox": 29,
     "pitcherRate": "高",
-    "hasCatcherAB": true,
-    "catchersABNames": [
-      "里崎智也(B)"
-    ],
+    "hasCatcherAB": false,
+    "catchersABNames": [],
     "maxOBStars": 301,
     "highlightOB": "里崎智也(★301/捕手B), 川上憲伸(★290), 長池徳二(★293)",
     "summary": "高校数29校で甲子園直行レベル。キャッチャーB里崎智也とエース川上憲伸を同時に狙える四国屈指の穴場名門。",
@@ -3820,7 +3815,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1992,
         "special": "",
         "isGold": false,
-        "catcherGrade": "B",
+        "catcherGrade": "C",
         "dlc": false
       },
       {
@@ -4098,10 +4093,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "最少 (20〜40校)",
     "schoolCountApprox": 27,
     "pitcherRate": "高",
-    "hasCatcherAB": true,
-    "catchersABNames": [
-      "伊藤光(B)"
-    ],
+    "hasCatcherAB": false,
+    "catchersABNames": [],
     "maxOBStars": 310,
     "highlightOB": "藤川球児(★310), 伊藤光(★280/捕手B), 有藤道世(★281)",
     "summary": "高校数全国2位の少なさ（27校）。火の玉ストレート藤川球児に加えて明徳義塾のキャッチャーB伊藤光が狙える隠れた最強地域。",
@@ -4156,9 +4149,9 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "pos": "捕",
         "highSchool": "明徳義塾",
         "year": 2005,
-        "special": "キャッチャーB",
+        "special": "",
         "isGold": false,
-        "catcherGrade": "B",
+        "catcherGrade": "C",
         "dlc": false
       },
       {
@@ -4169,7 +4162,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 2007,
         "special": "",
         "isGold": false,
-        "catcherGrade": "C",
+        "catcherGrade": "D",
         "dlc": false
       },
       {
@@ -4483,10 +4476,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "少 (40〜60校)",
     "schoolCountApprox": 56,
     "pitcherRate": "中",
-    "hasCatcherAB": true,
-    "catchersABNames": [
-      "伊藤勤(A)"
-    ],
+    "hasCatcherAB": false,
+    "catchersABNames": [],
     "maxOBStars": 393,
     "highlightOB": "秋山幸二(★393), 村上宗隆(★330), 松中信彦(★302)",
     "summary": "秋山幸二、村上宗隆、松中信彦、川上哲治、伊藤勤（捕手A）と打撃・捕手陣が歴代最強クラス。高校数56校。",
@@ -4622,10 +4613,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "少 (40〜60校)",
     "schoolCountApprox": 44,
     "pitcherRate": "中",
-    "hasCatcherAB": true,
-    "catchersABNames": [
-      "城島健司(DLC)(B)"
-    ],
+    "hasCatcherAB": false,
+    "catchersABNames": [],
     "maxOBStars": 366,
     "highlightOB": "稲尾和久(★366), 城島健司(★324/捕手B), 内川聖一(★292)",
     "summary": "鉄腕・稲尾和久（★366）と強打捕手・城島健司（キャッチャーB）の強力バッテリーが狙える穴場有力県。",
@@ -4649,7 +4638,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1992,
         "special": "バズーカ送球",
         "isGold": true,
-        "catcherGrade": "B",
+        "catcherGrade": "C",
         "dlc": true
       },
       {
