@@ -349,10 +349,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
   // === 捕手 (キャッチャーA/B & 金特) ===
   '古田敦也': {
     initialStats: { trajectory: 3, meet: 'C65', power: 'B72', run: 'C60', arm: 'A88', fielding: 'A82', catching: 'B72' },
-    goldAbilities: ['球界の頭脳', 'ささやき戦術'],
-    blueAbilities: ['送球A', 'アベレージヒッター'], // キャッチャーAは除外
+    goldAbilities: ['球界の頭脳'],
+    blueAbilities: ['送球A', 'アベレージヒッター', '守備職人', '流し打ち'], // キャッチャーAは除外（※ささやき戦術は野村克也固有のため未所持）
     redAbilities: [],
-    advice: '【栄冠ナイン歴代最強捕手】金特「球界の頭脳」「ささやき戦術」所持。全投手の制球+15・スタミナ消費-15・相手打力大幅低下。最優先リセマラ対象！'
+    advice: '【栄冠ナイン歴代最強捕手】金特「球界の頭脳」所持。全投手の制球+15・スタミナ消費-15・相手打力低下。最優先リセマラ対象！'
   },
   '野村克也': {
     initialStats: { trajectory: 4, meet: 'B72', power: 'A86', run: 'D50', arm: 'A80', fielding: 'B72', catching: 'B70' },
@@ -399,14 +399,14 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
   '谷繁元信(DLC)': {
     initialStats: { trajectory: 2, meet: 'D56', power: 'C66', run: 'D50', arm: 'A86', fielding: 'A82', catching: 'B72' },
     goldAbilities: [],
-    blueAbilities: ['キャッチャーA', 'ささやき戦術', 'ブロック○', '送球B'],
+    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'プルヒッター'],
     redAbilities: ['三振'],
     advice: 'キャッチャーA持ちの守備特化型名捕手。投手陣の防御率が劇的に改善します。'
   },
   '谷繁元信': {
     initialStats: { trajectory: 2, meet: 'D55', power: 'C65', run: 'D50', arm: 'A85', fielding: 'A80', catching: 'B70' },
     goldAbilities: [],
-    blueAbilities: ['キャッチャーA', 'ささやき戦術', 'ブロック○', '送球B'],
+    blueAbilities: ['キャッチャーA', 'ブロック○', '送球B', 'プルヒッター'],
     redAbilities: ['三振'],
     advice: 'キャッチャーA持ちの守備特化型名捕手。投手陣の防御率が劇的に改善します。'
   },
@@ -420,7 +420,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
   '大矢明彦': {
     initialStats: { trajectory: 2, meet: 'D52', power: 'D58', run: 'D52', arm: 'A86', fielding: 'A80', catching: 'B70' },
     goldAbilities: [],
-    blueAbilities: ['キャッチャーA', '送球A', 'ささやき○'],
+    blueAbilities: ['キャッチャーA', '送球A', 'ブロック○'],
     redAbilities: [],
     advice: 'キャッチャーA＆送球A。守備面の信頼度が非常に高い正捕手。'
   },
