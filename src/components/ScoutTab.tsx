@@ -455,11 +455,15 @@ export const ScoutTab: React.FC = () => {
                             金特
                           </span>
                         )}
-                        {player.catcherGrade && (
+                        {goldAbilities.includes('球界の頭脳') ? (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-300 dark:bg-amber-400 text-amber-950 font-black shrink-0 shadow-sm border border-amber-500">
+                            捕(頭脳)
+                          </span>
+                        ) : player.catcherGrade ? (
                           <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-600 text-white font-black shrink-0 shadow-sm">
                             捕{player.catcherGrade}
                           </span>
-                        )}
+                        ) : null}
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mt-0.5">
                         <span className="font-bold text-blue-600 dark:text-blue-400">
