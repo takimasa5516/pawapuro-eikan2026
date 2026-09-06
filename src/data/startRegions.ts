@@ -477,7 +477,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 2013,
         "special": "",
         "isGold": false,
-        "catcherGrade": "",
+        "catcherGrade": "C",
         "dlc": false
       }
     ]
@@ -670,8 +670,10 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "多 (100〜180校)",
     "schoolCountApprox": 148,
     "pitcherRate": "中",
-    "hasCatcherAB": false,
-    "catchersABNames": [],
+    "hasCatcherAB": true,
+    "catchersABNames": [
+      "若月健矢(B)"
+    ],
     "maxOBStars": 304,
     "highlightOB": "斎藤雅樹(★304), 鳥谷敬(DLC)(★285), 鳥谷敬(★272)",
     "summary": "高校数148校。斎藤雅樹(★304)などの転生OBが出現する標準的地域。",
@@ -750,7 +752,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 2011,
         "special": "",
         "isGold": false,
-        "catcherGrade": "",
+        "catcherGrade": "B",
         "dlc": false
       }
     ]
@@ -946,6 +948,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "pitcherRate": "中",
     "hasCatcherAB": true,
     "catchersABNames": [
+      "田淵幸一(B)",
       "阿部慎之助(DLC)(B)",
       "阿部慎之助(B)",
       "大矢明彦(A)"
@@ -984,7 +987,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1962,
         "special": "アーチスト",
         "isGold": true,
-        "catcherGrade": "",
+        "catcherGrade": "B",
         "dlc": false
       },
       {
@@ -2287,8 +2290,10 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "中 (60〜90校)",
     "schoolCountApprox": 74,
     "pitcherRate": "高",
-    "hasCatcherAB": false,
-    "catchersABNames": [],
+    "hasCatcherAB": true,
+    "catchersABNames": [
+      "野村克也(頭脳/A)"
+    ],
     "maxOBStars": 344,
     "highlightOB": "野村克也(★344), 糸井嘉男(DLC)(★316), 衣笠祥雄(★304)",
     "summary": "高校数74校。野村克也(★344)などの転生OBが出現する標準的地域。",
@@ -2301,7 +2306,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1951,
         "special": "球界の頭脳",
         "isGold": true,
-        "catcherGrade": "",
+        "catcherGrade": "A",
         "dlc": false
       },
       {
@@ -2606,7 +2611,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 2011,
         "special": "",
         "isGold": false,
-        "catcherGrade": "",
+        "catcherGrade": "C",
         "dlc": false
       },
       {
@@ -2916,8 +2921,10 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "多 (100〜180校)",
     "schoolCountApprox": 156,
     "pitcherRate": "高",
-    "hasCatcherAB": false,
-    "catchersABNames": [],
+    "hasCatcherAB": true,
+    "catchersABNames": [
+      "古田敦也(頭脳/A)"
+    ],
     "maxOBStars": 392,
     "highlightOB": "古田敦也(★415), 山田久志(★395), 鈴木啓示(★335)",
     "summary": "栄冠ナイン最強の捕手「古田敦也（キャッチャーA・球界の頭脳）」を狙える唯一の高校所在地。古田を引けばチーム防御率が激変。",
@@ -2930,7 +2937,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1981,
         "special": "球界の頭脳",
         "isGold": true,
-        "catcherGrade": "",
+        "catcherGrade": "A",
         "dlc": false
       },
       {
@@ -3797,8 +3804,10 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "最少 (20〜40校)",
     "schoolCountApprox": 29,
     "pitcherRate": "高",
-    "hasCatcherAB": false,
-    "catchersABNames": [],
+    "hasCatcherAB": true,
+    "catchersABNames": [
+      "里崎智也(B)"
+    ],
     "maxOBStars": 301,
     "highlightOB": "里崎智也(★301/捕手B), 川上憲伸(★290), 長池徳二(★293)",
     "summary": "高校数29校で甲子園直行レベル。キャッチャーB里崎智也とエース川上憲伸を同時に狙える四国屈指の穴場名門。",
@@ -3811,7 +3820,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1992,
         "special": "",
         "isGold": false,
-        "catcherGrade": "",
+        "catcherGrade": "B",
         "dlc": false
       },
       {
@@ -3926,8 +3935,8 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "pos": "三",
         "highSchool": "高校",
         "year": 1949,
-        "special": "",
-        "isGold": false,
+        "special": "怪力",
+        "isGold": true,
         "catcherGrade": "",
         "dlc": false
       },
@@ -4613,8 +4622,10 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
     "schoolCountLevel": "少 (40〜60校)",
     "schoolCountApprox": 44,
     "pitcherRate": "中",
-    "hasCatcherAB": false,
-    "catchersABNames": [],
+    "hasCatcherAB": true,
+    "catchersABNames": [
+      "城島健司(DLC)(B)"
+    ],
     "maxOBStars": 366,
     "highlightOB": "稲尾和久(★366), 城島健司(★324/捕手B), 内川聖一(★292)",
     "summary": "鉄腕・稲尾和久（★366）と強打捕手・城島健司（キャッチャーB）の強力バッテリーが狙える穴場有力県。",
@@ -4638,7 +4649,7 @@ export const START_REGIONS_DATA: RecommendedRegion[] = [
         "year": 1992,
         "special": "バズーカ送球",
         "isGold": true,
-        "catcherGrade": "",
+        "catcherGrade": "B",
         "dlc": true
       },
       {
