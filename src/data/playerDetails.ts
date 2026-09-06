@@ -16,10 +16,43 @@ export interface PlayerInitialStats {
 
 export interface PlayerDetails {
   initialStats: PlayerInitialStats;
-  blueAbilities: string[];
-  redAbilities: string[];
+  goldAbilities: string[]; // 金特（背景黄色にて表記、下位青特は除外）
+  blueAbilities: string[]; // 青特（金特がある場合、下位青特は完全除外）
+  redAbilities: string[];  // 赤特
   advice?: string;
 }
+
+// 金特とそれに対応する下位青特のマッピング（金特所持時は下位青特を非表示にするルール）
+export const GOLD_TO_LOWER_MAP: Record<string, string[]> = {
+  '球界の頭脳': ['キャッチャーA', 'キャッチャーB', 'キャッチャー○'],
+  'アーチスト': ['パワーヒッター'],
+  '怪力': ['パワーヒッター'],
+  '安打製造機': ['アベレージヒッター'],
+  '怪童': ['ノビA', 'ノビB', 'ノビ○'],
+  '火の玉ボール': ['ノビA', 'ノビB', 'ノビ○'],
+  '勝利の星': ['勝ち運'],
+  '鉄人': ['ケガしにくさA', 'ケガしにくさB', 'ケガしにくさ○'],
+  'ささやき戦術': ['ささやき○'],
+  '神速': ['走塁A', '走塁B', '走塁○'],
+  '電光石火': ['盗塁A', '盗塁B', '盗塁○'],
+  '魔術師': ['守備職人'],
+  '高速レーザー': ['レーザービーム', '送球A'],
+  '強肩': ['送球A', '送球B'],
+  '強打者': ['プルヒッター'],
+  '広角砲': ['広角打法'],
+  '精密機械': ['低め○', 'コントロール○'],
+  '勝負師': ['チャンスA', 'チャンスB', 'チャンス○'],
+  '精神的支柱': ['ムード○'],
+  '強心臓': ['対ピンチA', '対ピンチB', '対ピンチ○'],
+  '不屈の魂': ['打たれ強さA', '打たれ強さB'],
+  'ドクターK': ['奪三振'],
+  '恐怖の満塁男': ['満塁男'],
+  '一球入魂': ['初球○'],
+  '代打の神様': ['代打○'],
+  '変幻自在': ['緩急○']
+};
+
+export const ALL_GOLD_ABILITIES = new Set(Object.keys(GOLD_TO_LOWER_MAP));
 
 // ランク判定用カラー取得関数 (S, A, B, C, D, E, F, G)
 export function getStatGradeColor(statStr?: string | number): {
@@ -78,6 +111,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D55',
       catching: 'E48'
     },
+    goldAbilities: [],
     blueAbilities: ['二刀流', '奪三振', 'ノビB', '球持ち○', 'パワーヒッター', '広角打法'],
     redAbilities: ['三振(打者時)'],
     advice: '投打両面で1年目から圧倒的。スタミナ回復アイテムや伝令を併用してフル回転させましょう。'
@@ -96,6 +130,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D54',
       catching: 'E46'
     },
+    goldAbilities: [],
     blueAbilities: ['二刀流', '奪三振', 'ノビB', 'パワーヒッター', '広角打法'],
     redAbilities: ['三振(打者時)'],
     advice: 'エース兼主砲としてチームを牽引可能。1年生から夏の予選で登板させ経験点を稼ぎましょう。'
@@ -107,6 +142,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: 'スライダー3, カーブ2, フォーク3'
     },
+    goldAbilities: [],
     blueAbilities: ['キレ○', '奪三振', 'ノビA', '回復A', '尻上がり', '闘志'],
     redAbilities: ['スロースターター'],
     advice: '序盤（1〜2回）の失点に注意。立ち上がりを伝令「励ます」や指示で乗り切れば完投ペースに。'
@@ -118,7 +154,8 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B74',
       breakingBalls: '高速スライダー4, SFF4'
     },
-    blueAbilities: ['勝利の星(金特)', '奪三振', 'キレ○', '闘志', '対ピンチB', '打たれ強さA'],
+    goldAbilities: ['勝利の星'],
+    blueAbilities: ['奪三振', 'キレ○', '闘志', '対ピンチB', '打たれ強さA'],
     redAbilities: [],
     advice: '金特「勝利の星」持ち。赤特なしで初期から抜群の安定感を誇る高校球界最強ピッチャー。'
   },
@@ -129,6 +166,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'スライダー4, SFF3'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', 'キレ○', '闘志', '対ピンチB', '打たれ強さA'],
     redAbilities: [],
     advice: 'ピンチに極めて強く赤特もなし。1年目から絶対的守護神・先発として計算できます。'
@@ -140,6 +178,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'カットボール3, カーブ2, SFF3'
     },
+    goldAbilities: [],
     blueAbilities: ['ノビA', 'キレ○', '奪三振', '低め○', '対ピンチB'],
     redAbilities: [],
     advice: '直球・変化球・制球の三拍子が揃う現代最強エース。低め中心の配球指示が特効。'
@@ -151,6 +190,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'D55',
       breakingBalls: 'フォーク4, スライダー2'
     },
+    goldAbilities: [],
     blueAbilities: ['ノビA', '奪三振', 'ジャイロボール'],
     redAbilities: ['ケガしにくさE', '回復E'],
     advice: '豪速球とフォークは圧巻ですが、ケガ・回復Eのため連投は厳禁。休養マスや控え投手を活用。'
@@ -162,6 +202,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'A80',
       breakingBalls: '高速スライダー4, カーブ2, チェンジアップ2'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', 'キレ○', '対ピンチA', '尻上がり', '闘志'],
     redAbilities: ['四球'],
     advice: '怪物級のスタミナと奪三振力。四球赤特があるため、カウントを悪くした際の甘い球に注意。'
@@ -173,9 +214,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'A82',
       breakingBalls: 'カーブ4'
     },
-    blueAbilities: ['怪童(金特)', 'ノビA', '奪三振', '重い球'],
+    goldAbilities: ['怪童'],
+    blueAbilities: ['奪三振', '重い球', '尻上がり'],
     redAbilities: [],
-    advice: '浮き上がる豪速球。コントロールも高く、ストレート中心の戦術指示で三振の山を築けます。'
+    advice: '金特「怪童」持ち。浮き上がる剛速球で三振の山を築きます。'
   },
   '藤川球児': {
     initialStats: {
@@ -184,9 +226,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'D55',
       breakingBalls: 'フォーク4, カーブ1'
     },
-    blueAbilities: ['火の玉ボール(金特)', 'ノビA', '奪三振', 'キレ○'],
+    goldAbilities: ['火の玉ボール'],
+    blueAbilities: ['奪三振', 'キレ○'],
     redAbilities: [],
-    advice: '救援適性抜群。終盤7〜9回のピンチに投入すれば、三振で相手の反撃を完全に断てます。'
+    advice: '金特「火の玉ボール」持ち。終盤のピンチや最終回に登板させて反撃を断ちましょう。'
   },
   '佐々木主浩': {
     initialStats: {
@@ -195,6 +238,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'D50',
       breakingBalls: 'フォーク5'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', '威圧感(投手)', '重い球'],
     redAbilities: [],
     advice: '落差MAXのフォークと威圧感。最終回のストッパーとして無類の強さを誇ります。'
@@ -206,6 +250,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: 'フォーク4, スライダー2'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', 'ノビB', '逃げ球'],
     redAbilities: ['四球'],
     advice: 'お化けフォークで空振りを奪える。四球が出やすいため、伝令でコントロールを補うと吉。'
@@ -217,6 +262,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: 'カーブ4, スライダー2, SFF2'
     },
+    goldAbilities: [],
     blueAbilities: ['ノビA', 'キレ○', '投球位置右', '打撃力○'],
     redAbilities: [],
     advice: '制球力Bと多彩な変化球で失点が極小。打撃能力も高いため下位打線のポイントゲッターに。'
@@ -228,6 +274,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B75',
       breakingBalls: 'ツーシーム3, スライダー3, フォーク2'
     },
+    goldAbilities: [],
     blueAbilities: ['打たれ強さA', '対ピンチB', '闘志', 'ゴロピッチャー'],
     redAbilities: [],
     advice: '動く球で打たせて取るタフネス右腕。守備陣の捕球・守備力を高めておくと無失点に抑えます。'
@@ -239,6 +286,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'スライダー4, チェンジアップ2, カーブ2'
     },
+    goldAbilities: [],
     blueAbilities: ['キレ○', '低め○', '尻上がり', '打たれ強さB'],
     redAbilities: [],
     advice: '安定感抜群のマエケンスライダー。イニングが進むほど能力が上がる尻上がり持ち。'
@@ -250,6 +298,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'シンカー4, カーブ2'
     },
+    goldAbilities: [],
     blueAbilities: ['緩急○', 'テンポ○', '対ピンチB'],
     redAbilities: [],
     advice: '独特のサイドスローから繰り出すシンカーと緩急で翻弄。相手の強打者にも動じません。'
@@ -261,6 +310,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'カーブ4, スライダー2'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', 'ノビB'],
     redAbilities: ['四球'],
     advice: '本格派左腕。キレのある大きなカーブで三振を量産できます。四球を特訓等で消したいところ。'
@@ -272,6 +322,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: 'スライダー3, カーブ3'
     },
+    goldAbilities: [],
     blueAbilities: ['闘志', '対ピンチA', '打たれ強さA'],
     redAbilities: ['短気'],
     advice: '走者を背負ったピンチで真価を発揮。「短気」があるため連打を浴びたらすぐ伝令で落ち着かせましょう。'
@@ -283,6 +334,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'D54',
       breakingBalls: '縦スライダー3, カーブ1'
     },
+    goldAbilities: [],
     blueAbilities: ['闘志', 'ノビA', '重い球'],
     redAbilities: [],
     advice: '炎のストッパー。強気のストレート勝負でフライ・三振を量産します。'
@@ -294,6 +346,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B72',
       breakingBalls: 'チェンジアップ4, スライダー3, カーブ2'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', 'ノビA', 'キレ○'],
     redAbilities: [],
     advice: '球速以上の伸びを感じるストレートとチェンジアップのコンビネーションが強力。'
@@ -305,6 +358,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'C65',
       breakingBalls: 'スローカーブ4, スライダー2, チェンジアップ2'
     },
+    goldAbilities: [],
     blueAbilities: ['キレ○', '緩急○', 'テンポ○'],
     redAbilities: [],
     advice: '遅い球と緩急で相手のタイミングを徹底的に狂わせる技巧派左腕の最高峰。'
@@ -316,6 +370,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: 'カットボール3, スライダー2, フォーク2'
     },
+    goldAbilities: [],
     blueAbilities: ['逃げ球', '打たれ強さB'],
     redAbilities: [],
     advice: '被本塁打が極めて出にくい安心設計。1年目から試合を作りやすい優秀な先発。'
@@ -327,6 +382,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'B70',
       breakingBalls: '縦カーブ4, チェンジアップ3'
     },
+    goldAbilities: [],
     blueAbilities: ['キレ○', '低め○', '尻上がり'],
     redAbilities: [],
     advice: 'ブレーキの利いた縦カーブが武器。コントロールCで大崩れしない高水準ルーキー。'
@@ -338,12 +394,13 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       stamina: 'C68',
       breakingBalls: 'スライダー3, スプリット3'
     },
+    goldAbilities: [],
     blueAbilities: ['奪三振', '闘志'],
     redAbilities: [],
     advice: '追い込んでからのスプリットで高い空振り率。赤特もなく扱いやすい即戦力。'
   },
 
-  // === 捕手 (キャッチャーA/B) ===
+  // === 捕手 (キャッチャーA/B & 金特) ===
   '古田敦也': {
     initialStats: {
       trajectory: 3,
@@ -354,9 +411,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'A82',
       catching: 'B72'
     },
-    blueAbilities: ['球界の頭脳(金特)', 'キャッチャーA', 'ささやき戦術', '送球A', 'アベレージヒッター'],
+    goldAbilities: ['球界の頭脳'],
+    blueAbilities: ['ささやき戦術', '送球A', 'アベレージヒッター'], // キャッチャーAは球界の頭脳があるため除外
     redAbilities: [],
-    advice: '【栄冠ナイン歴代最強捕手】全投手の制球+15・スタミナ消費-15・相手打力低下。最優先リセマラ対象！'
+    advice: '【栄冠ナイン歴代最強捕手】金特「球界の頭脳」所持。全投手の制球+15・スタミナ消費-15・相手打力低下。最優先リセマラ対象！'
   },
   '野村克也': {
     initialStats: {
@@ -368,6 +426,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B72',
       catching: 'B70'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーA', 'ささやき戦術', 'パワーヒッター', '広角打法', 'チャンスA'],
     redAbilities: ['走塁E'],
     advice: 'キャッチャーAと長打力を併せ持つ球界のレジェンド。4番捕手としてチームの中心に。'
@@ -382,6 +441,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', '強肩', 'パワーヒッター', '逆境○'],
     redAbilities: [],
     advice: '強肩A88で相手の盗塁を完全阻止。打力もパワーAでクリーンナップを打てます。'
@@ -396,6 +456,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C65',
       catching: 'C60'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', 'パワーヒッター', 'プルヒッター', 'サヨナラ男'],
     redAbilities: [],
     advice: '左のスラッガー捕手。長打力とリードを両立し、勝負強さも抜群。'
@@ -410,6 +471,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'A80',
       catching: 'B70'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーA', 'ささやき戦術', 'ブロック○', '送球B'],
     redAbilities: ['三振'],
     advice: 'キャッチャーA持ちの守備特化型名捕手。投手陣の防御率が劇的に改善します。'
@@ -424,6 +486,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C62',
       catching: 'C60'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', '意外性', 'チャンスB'],
     redAbilities: [],
     advice: '要所で一発を放つ大舞台の強さ。徳島県からのスタートで手堅いリセマラ候補。'
@@ -438,6 +501,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D52',
       catching: 'D50'
     },
+    goldAbilities: [],
     blueAbilities: ['アベレージヒッター', '広角打法', '逆境○'],
     redAbilities: [],
     advice: '打撃力は全捕手中でも屈指。リード能力は特訓やOBマスでキャッチャーB以上に伸ばすのが理想。'
@@ -452,6 +516,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B74',
       catching: 'C64'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', '送球A', '高速チャージ'],
     redAbilities: ['三振'],
     advice: '肩力S90の甲斐キャノン。相手の機動力を完全に封殺し、ピンチを未然に防ぎます。'
@@ -466,6 +531,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', 'ブロック○', '意外性'],
     redAbilities: [],
     advice: 'ワンバウンド球の後逸を防ぐ壁役として優秀。攻守のバランスが取れた好捕手。'
@@ -480,6 +546,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C64'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', '意外性', '固め打ち'],
     redAbilities: [],
     advice: 'リードBで投手陣をアシストしつつ、勝負どころで巧打を見せる頼れる扇の要。'
@@ -494,12 +561,44 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['キャッチャーB', '送球B'],
     redAbilities: [],
     advice: '高知・明徳義塾のキャッチャーB。四国地方スタートでのバッテリー強化に最適。'
   },
 
   // === 野手 (一・二・三・遊・外) ===
+  '長嶋茂雄': {
+    initialStats: {
+      trajectory: 3,
+      meet: 'B76',
+      power: 'B76',
+      run: 'B72',
+      arm: 'B78',
+      fielding: 'B75',
+      catching: 'B70'
+    },
+    goldAbilities: [],
+    // ※パワーヒッターは未所持！アベレージヒッター・広角打法・チャンスA等を所持
+    blueAbilities: ['アベレージヒッター', '広角打法', 'チャンスA', 'サヨナラ男', '固め打ち', '初球○', '守備職人'],
+    redAbilities: [],
+    advice: '【ミスタープロ野球】アベレージヒッターと広角打法を併せ持つ打率マスター。得点圏での勝負強さも圧倒的。'
+  },
+  '王貞治': {
+    initialStats: {
+      trajectory: 4,
+      meet: 'B76',
+      power: 'S92',
+      run: 'C60',
+      arm: 'B70',
+      fielding: 'B70',
+      catching: 'B72'
+    },
+    goldAbilities: ['アーチスト'],
+    blueAbilities: ['アベレージヒッター', '威圧感', '選球眼', '逆境○'], // パワーヒッターはアーチストがあるため除外
+    redAbilities: [],
+    advice: '金特「アーチスト」所持。パワーS92から放たれる打球は高確率で本塁打になります。'
+  },
   'イチロー': {
     initialStats: {
       trajectory: 2,
@@ -510,7 +609,8 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'S90',
       catching: 'A82'
     },
-    blueAbilities: ['アベレージヒッター', '広角打法', '守備職人', 'レーザービーム', '走塁A', '盗塁A', 'チャンスメーカー'],
+    goldAbilities: [],
+    blueAbilities: ['アベレージヒッター', '広角打法', '守備職人', 'レーザービーム', '走塁A', '盗塁A', 'チャンスメーカー', '内野安打○'],
     redAbilities: [],
     advice: '【打・走・守の頂点】出塁率・守備範囲・補殺すべてが神レベル。1年目から打率5割超えを狙えます。'
   },
@@ -524,37 +624,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C60',
       catching: 'C60'
     },
-    blueAbilities: ['パワーヒッター', '広角打法', '威圧感', 'チャンスA', '逆境○'],
+    goldAbilities: [],
+    blueAbilities: ['パワーヒッター', '広角打法', '威圧感', 'チャンスA', '逆境○', 'プルヒッター'],
     redAbilities: [],
     advice: '弾道4×パワーA88の超ド級スラッガー。得点圏で驚異的な打点力を誇る4番打者。'
-  },
-  '王貞治': {
-    initialStats: {
-      trajectory: 4,
-      meet: 'B76',
-      power: 'S92',
-      run: 'C60',
-      arm: 'B70',
-      fielding: 'B70',
-      catching: 'B72'
-    },
-    blueAbilities: ['アーチスト(金特)', 'パワーヒッター', '威圧感', 'アベレージヒッター', '選球眼'],
-    redAbilities: [],
-    advice: 'パワーS92。フライ性の打球がすべてスタンドへ消える本塁打製造機。'
-  },
-  '長嶋茂雄': {
-    initialStats: {
-      trajectory: 3,
-      meet: 'B74',
-      power: 'A84',
-      run: 'B72',
-      arm: 'B78',
-      fielding: 'B75',
-      catching: 'B70'
-    },
-    blueAbilities: ['チャンスA', 'サヨナラ男', 'パワーヒッター', '逆境○', '守備職人'],
-    redAbilities: [],
-    advice: '劇的な場面ほど能力が爆発するお祭り男。サードの守備も堅実無比。'
   },
   '落合博満': {
     initialStats: {
@@ -566,6 +639,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C62',
       catching: 'B70'
     },
+    goldAbilities: [],
     blueAbilities: ['アベレージヒッター', '広角打法', 'パワーヒッター', '威圧感', '流し打ち', 'チャンスA'],
     redAbilities: ['併殺'],
     advice: 'ミートA・パワーAの3冠王打法。足は速くないため、ランナー1塁でのゴロ併殺にのみ注意。'
@@ -580,6 +654,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D52',
       catching: 'E48'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', '威圧感', '選球眼'],
     redAbilities: ['三振', 'エラー'],
     advice: '日本人シーズン最多本塁打の破壊力。守備と捕球がやや低いため、内野守備練習で早めの強化を。'
@@ -594,6 +669,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B72',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['広角打法', 'パワーヒッター', '固め打ち', 'チャンスB', '送球B'],
     redAbilities: [],
     advice: '打てるショートの最高傑作。守備・走力も高水準で1年生から遊撃手のレギュラー固定可能。'
@@ -608,6 +684,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C62',
       catching: 'C60'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', '逆境○', '初球○'],
     redAbilities: [],
     advice: '甲子園で通算13本塁打を記録した勝負強さ。劣勢でも一撃で試合をひっくり返します。'
@@ -622,9 +699,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C65'
     },
-    blueAbilities: ['怪力(金特)', 'パワーヒッター', '広角打法'],
+    goldAbilities: ['怪力'],
+    blueAbilities: ['広角打法', '初球○', 'チャンスB'], // パワーヒッターは怪力があるため除外
     redAbilities: [],
-    advice: '香川・高松一高の怪童。長打力・走力・強肩すべてが1年目から完成されています。'
+    advice: '金特「怪力」所持。香川・高松一高の怪童。長打力・走力・強肩すべてが1年目から完成されています。'
   },
   '山本浩二': {
     initialStats: {
@@ -636,6 +714,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'A80',
       catching: 'B72'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', '守備職人', '送球A'],
     redAbilities: [],
     advice: 'ミスター赤ヘル。外野手の模範となる攻守走完璧なステータスを誇ります。'
@@ -650,9 +729,10 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B72',
       catching: 'C62'
     },
-    blueAbilities: ['鉄人(金特)', 'ケガしにくさA', 'パワーヒッター', '逆境○'],
+    goldAbilities: ['鉄人'],
+    blueAbilities: ['パワーヒッター', '逆境○'], // ケガしにくさAは鉄人があるため除外
     redAbilities: [],
-    advice: '連続試合出場の鉄人。ケガしにくさAでハードな練習・合宿でも離脱知らず。'
+    advice: '金特「鉄人」所持。連続試合出場の鉄人。怪我知らずでタフな育成が可能です。'
   },
   '前田智徳': {
     initialStats: {
@@ -664,6 +744,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B70',
       catching: 'C64'
     },
+    goldAbilities: [],
     blueAbilities: ['アベレージヒッター', '流し打ち', '初球○'],
     redAbilities: ['ケガしにくさE'],
     advice: '孤高の天才打者。ミートA80で安打を量産。故障マスでのケガにだけは配慮しましょう。'
@@ -678,6 +759,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D55',
       catching: 'D52'
     },
+    goldAbilities: [],
     blueAbilities: ['アベレージヒッター', '広角打法', '選球眼', '固め打ち'],
     redAbilities: [],
     advice: '福井・敦賀気比の至宝。三振が非常に少なく、四球も選べる高出塁率の最強クラッチヒッター。'
@@ -692,6 +774,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B72',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', '送球A', 'チャンスB'],
     redAbilities: [],
     advice: '強肩強打のメジャーリーガー。右翼手からのレーザービーム返球で失点を防ぎます。'
@@ -706,6 +789,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C65',
       catching: 'C62'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', 'プルヒッター'],
     redAbilities: [],
     advice: '奈良・智弁学園出身。本塁打王の確かな長打力で中軸を任せられます。'
@@ -720,6 +804,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'A82',
       catching: 'B72'
     },
+    goldAbilities: [],
     blueAbilities: ['守備職人', '送球A', 'バント職人'],
     redAbilities: [],
     advice: '超絶ファインプレー連発。バント職人持ちのため送りバント・スクイズ成功率が100%近くに。'
@@ -734,6 +819,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'S90',
       catching: 'A82'
     },
+    goldAbilities: [],
     blueAbilities: ['守備職人', '送球A', '盗塁A', '走塁A'],
     redAbilities: [],
     advice: '遊撃守備S90。三遊間の当たりをすべてアウトにして投手を助ける守備のスペシャリスト。'
@@ -748,6 +834,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'S92',
       catching: 'A84'
     },
+    goldAbilities: [],
     blueAbilities: ['守備職人', '高速チャージ', '送球A'],
     redAbilities: [],
     advice: '二塁守備S92の忍者。センター前に抜けそうな打球もダイビングキャッチで捕殺します。'
@@ -762,6 +849,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B75',
       catching: 'B70'
     },
+    goldAbilities: [],
     blueAbilities: ['盗塁A', '走塁A', '内野安打○', '流し打ち'],
     redAbilities: [],
     advice: '走力S94。出塁すれば確実に二盗・三盗を決められる1番センターの決定版。'
@@ -776,6 +864,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C65',
       catching: 'D52'
     },
+    goldAbilities: [],
     blueAbilities: ['盗塁A', '走塁A', '内野安打○'],
     redAbilities: ['三振'],
     advice: '球界トップの快足S96。代走・スタメン問わず、足だけで1点をもぎ取れます。'
@@ -790,6 +879,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D55',
       catching: 'E48'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', 'プルヒッター', '初球○'],
     redAbilities: ['送球E', '併殺'],
     advice: '長打力抜群ですが送球E・併殺持ち。特別指導や公式戦で送球を消去すると一気に化けます。'
@@ -804,6 +894,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B74',
       catching: 'B70'
     },
+    goldAbilities: [],
     blueAbilities: ['内野安打○', '守備職人', 'ムード○'],
     redAbilities: [],
     advice: 'ムード○持ちで味方全員のミート・パワー+5の隠れ神スキル持ち。ベンチにいるだけでも効果大。'
@@ -818,6 +909,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'B72',
       catching: 'B72'
     },
+    goldAbilities: [],
     blueAbilities: ['アベレージヒッター', '広角打法', 'チャンスB'],
     redAbilities: [],
     advice: '小さな大打者。北海道出身・首位打者。欠点がなく打率・得点圏ともにハイアベレージ。'
@@ -832,6 +924,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C65',
       catching: 'C60'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', '広角打法', '逆境○'],
     redAbilities: ['三振'],
     advice: '愛媛・宇和島東の強打者。パワーA80で三塁手としての得点力を一気に引き上げます。'
@@ -846,6 +939,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'D55',
       catching: 'D52'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', 'プルヒッター', '威圧感'],
     redAbilities: ['三振', '併殺'],
     advice: '沖縄スタート時の主砲候補。圧倒的なホームランアーチを架けます。三振に注意。'
@@ -860,6 +954,7 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
       fielding: 'C60',
       catching: 'D54'
     },
+    goldAbilities: [],
     blueAbilities: ['パワーヒッター', 'チャンスB'],
     redAbilities: ['三振'],
     advice: '香川・高松商のドラフト1位。1年目からB72のパワーで長打を連発。'
@@ -868,16 +963,48 @@ const MAJOR_PLAYERS_DETAILS: Record<string, PlayerDetails> = {
 
 // 辞書に個別定義されていない選手について、ポジションと★能力値から完全かつ整合的な初期値を生成する関数
 export function getPlayerDetails(player: Player): PlayerDetails {
-  // 1. 個別定義がある場合はそれを優先（DLC表記の揺れも吸収）
   const cleanName = player.name.replace(/\(DLC\)/g, '').trim();
+
+  // 金特抽出ヘルパー関数（金特がある場合は下位青特を自動で除外する）
+  const sanitizeAbilities = (golds: string[], blues: string[], reds: string[], advice?: string, initial?: PlayerInitialStats): PlayerDetails => {
+    // 選手データの特殊能力名に金特が含まれていれば金特へ昇格
+    const finalGolds = new Set(golds);
+    if (player.special && ALL_GOLD_ABILITIES.has(player.special)) {
+      finalGolds.add(player.special);
+    }
+    if (player.isGold && player.special) {
+      finalGolds.add(player.special);
+    }
+
+    // 金特の下位青特を除外セットに登録
+    const lowerToRemove = new Set<string>();
+    finalGolds.forEach(g => {
+      (GOLD_TO_LOWER_MAP[g] || []).forEach(low => lowerToRemove.add(low));
+    });
+
+    // 青特から下位互換を除外
+    const finalBlues = blues.filter(b => !finalGolds.has(b) && !lowerToRemove.has(b));
+
+    return {
+      initialStats: initial || {},
+      goldAbilities: Array.from(finalGolds),
+      blueAbilities: Array.from(new Set(finalBlues)),
+      redAbilities: reds,
+      advice
+    };
+  };
+
+  // 1. 個別定義がある場合
   if (MAJOR_PLAYERS_DETAILS[player.name]) {
-    return MAJOR_PLAYERS_DETAILS[player.name];
+    const item = MAJOR_PLAYERS_DETAILS[player.name];
+    return sanitizeAbilities(item.goldAbilities || [], item.blueAbilities, item.redAbilities, item.advice, item.initialStats);
   }
   if (MAJOR_PLAYERS_DETAILS[cleanName]) {
-    return MAJOR_PLAYERS_DETAILS[cleanName];
+    const item = MAJOR_PLAYERS_DETAILS[cleanName];
+    return sanitizeAbilities(item.goldAbilities || [], item.blueAbilities, item.redAbilities, item.advice, item.initialStats);
   }
 
-  // 2. ★ランクに基づくステータススケーリング
+  // 2. ★ランクに基づく動的ステータス生成
   const stars = player.stars || 260;
   const isPitcher = player.pos === '投';
   const isCatcher = player.pos === '捕' || player.isCatcher;
@@ -885,20 +1012,16 @@ export function getPlayerDetails(player: Player): PlayerDetails {
   // 初期ステータス生成
   if (isPitcher) {
     // 投手
-    // 球速: 136〜154km/h
     const speed = Math.min(154, Math.max(136, Math.round(135 + (stars - 200) * 0.11)));
     
-    // コントロール
     const cVal = Math.min(68, Math.max(38, Math.round(40 + (stars - 200) * 0.16)));
     const cLetter = cVal >= 70 ? 'B' : cVal >= 60 ? 'C' : cVal >= 50 ? 'D' : cVal >= 40 ? 'E' : 'F';
     const control = `${cLetter}${cVal}`;
 
-    // スタミナ
     const sVal = Math.min(78, Math.max(40, Math.round(42 + (stars - 200) * 0.2)));
     const sLetter = sVal >= 80 ? 'A' : sVal >= 70 ? 'B' : sVal >= 60 ? 'C' : sVal >= 50 ? 'D' : 'E';
     const stamina = `${sLetter}${sVal}`;
 
-    // 変化球
     let breakingBalls = 'スライダー2, カーブ2';
     if (stars >= 320) {
       breakingBalls = 'スライダー3, フォーク3, カーブ2';
@@ -906,105 +1029,92 @@ export function getPlayerDetails(player: Player): PlayerDetails {
       breakingBalls = 'スライダー3, フォーク2';
     }
 
-    // 青特・赤特
-    const blueAbilities: string[] = [];
-    if (player.special) blueAbilities.push(player.special);
-    if (stars >= 300) blueAbilities.push('奪三振', 'キレ○');
-    else if (stars >= 270) blueAbilities.push('打たれ強さB');
-    if (blueAbilities.length === 0) blueAbilities.push('対ピンチC');
+    const goldList: string[] = [];
+    const blueList: string[] = [];
+    if (player.special) {
+      if (ALL_GOLD_ABILITIES.has(player.special)) goldList.push(player.special);
+      else blueList.push(player.special);
+    }
+    if (stars >= 300) blueList.push('奪三振', 'キレ○');
+    else if (stars >= 270) blueList.push('打たれ強さB');
+    if (blueList.length === 0) blueList.push('対ピンチC');
 
-    const redAbilities: string[] = [];
+    const redList: string[] = [];
     if (stars < 260) {
-      redAbilities.push('四球');
+      redList.push('四球');
     }
 
-    return {
-      initialStats: {
-        speed,
-        control,
-        stamina,
-        breakingBalls
-      },
-      blueAbilities: Array.from(new Set(blueAbilities)),
-      redAbilities,
-      advice: stars >= 300 ? '奪三振力が高く、序盤からエースとして君臨可能。' : '安定した投球でローテーションの柱として期待できます。'
-    };
+    return sanitizeAbilities(
+      goldList,
+      blueList,
+      redList,
+      stars >= 300 ? '奪三振力が高く、序盤からエースとして君臨可能。' : '安定した投球でローテーションの柱として期待できます。',
+      { speed, control, stamina, breakingBalls }
+    );
   } else {
     // 野手
-    // 弾道
     let trajectory = 2;
     if (['一', '三', '外'].includes(player.pos) && stars >= 290) trajectory = 3;
     if (player.special?.includes('パワー') || stars >= 350) trajectory = 4;
 
-    // ミート
     const mVal = Math.min(76, Math.max(38, Math.round(42 + (stars - 200) * 0.18)));
     const mLetter = mVal >= 80 ? 'A' : mVal >= 70 ? 'B' : mVal >= 60 ? 'C' : mVal >= 50 ? 'D' : mVal >= 40 ? 'E' : 'F';
     const meet = `${mLetter}${mVal}`;
 
-    // パワー
     const pBonus = ['一', '三', '外'].includes(player.pos) ? 10 : ['遊', '二'].includes(player.pos) ? -5 : 0;
     const pVal = Math.min(88, Math.max(38, Math.round(40 + (stars - 200) * 0.22 + pBonus)));
     const pLetter = pVal >= 80 ? 'A' : pVal >= 70 ? 'B' : pVal >= 60 ? 'C' : pVal >= 50 ? 'D' : mVal >= 40 ? 'E' : 'F';
     const power = `${pLetter}${pVal}`;
 
-    // 走力
     const rBonus = ['遊', '二', '外'].includes(player.pos) ? 8 : -4;
     const rVal = Math.min(88, Math.max(40, Math.round(45 + (stars - 200) * 0.18 + rBonus)));
     const rLetter = rVal >= 90 ? 'S' : rVal >= 80 ? 'A' : rVal >= 70 ? 'B' : rVal >= 60 ? 'C' : rVal >= 50 ? 'D' : 'E';
     const run = `${rLetter}${rVal}`;
 
-    // 肩力
     const aBonus = isCatcher ? 14 : ['外', '三'].includes(player.pos) ? 6 : 0;
     const aVal = Math.min(88, Math.max(42, Math.round(45 + (stars - 200) * 0.18 + aBonus)));
     const aLetter = aVal >= 80 ? 'A' : aVal >= 70 ? 'B' : aVal >= 60 ? 'C' : aVal >= 50 ? 'D' : 'E';
     const arm = `${aLetter}${aVal}`;
 
-    // 守備力
     const dBonus = isCatcher || ['遊', '二'].includes(player.pos) ? 12 : 0;
     const dVal = Math.min(86, Math.max(40, Math.round(44 + (stars - 200) * 0.18 + dBonus)));
     const dLetter = dVal >= 80 ? 'A' : dVal >= 70 ? 'B' : dVal >= 60 ? 'C' : dVal >= 50 ? 'D' : 'E';
     const fielding = `${dLetter}${dVal}`;
 
-    // 捕球
     const cVal = Math.min(78, Math.max(40, Math.round(42 + (stars - 200) * 0.15)));
     const cLetter = cVal >= 80 ? 'A' : cVal >= 70 ? 'B' : cVal >= 60 ? 'C' : cVal >= 50 ? 'D' : 'E';
     const catching = `${cLetter}${cVal}`;
 
-    // 青特
-    const blueAbilities: string[] = [];
-    if (player.catcherGrade) blueAbilities.push(`キャッチャー${player.catcherGrade}`);
-    if (player.special) blueAbilities.push(player.special);
+    const goldList: string[] = [];
+    const blueList: string[] = [];
+    if (player.catcherGrade) blueList.push(`キャッチャー${player.catcherGrade}`);
+    if (player.special) {
+      if (ALL_GOLD_ABILITIES.has(player.special)) goldList.push(player.special);
+      else blueList.push(player.special);
+    }
     if (stars >= 310) {
-      if (['一', '三', '外'].includes(player.pos)) blueAbilities.push('パワーヒッター');
-      else blueAbilities.push('守備職人', '送球B');
+      if (['一', '三', '外'].includes(player.pos)) blueList.push('パワーヒッター');
+      else blueList.push('守備職人', '送球B');
     } else if (stars >= 280) {
-      blueAbilities.push('チャンスB');
+      blueList.push('チャンスB');
     }
-    if (blueAbilities.length === 0) blueAbilities.push('流し打ち');
+    if (blueList.length === 0) blueList.push('流し打ち');
 
-    // 赤特
-    const redAbilities: string[] = [];
+    const redList: string[] = [];
     if (stars < 260 && ['一', '外'].includes(player.pos)) {
-      redAbilities.push('送球E');
+      redList.push('送球E');
     }
 
-    return {
-      initialStats: {
-        trajectory,
-        meet,
-        power,
-        run,
-        arm,
-        fielding,
-        catching
-      },
-      blueAbilities: Array.from(new Set(blueAbilities)),
-      redAbilities,
-      advice: isCatcher 
+    return sanitizeAbilities(
+      goldList,
+      blueList,
+      redList,
+      isCatcher 
         ? `キャッチャー${player.catcherGrade || 'C'}。投手陣の防御率を大きく引き下げます。` 
         : stars >= 300 
         ? '走攻守のバランスが高く、1年目からレギュラー中軸として活躍可能。' 
-        : '堅実な能力でチームの土台を支える優秀な新入生。'
-    };
+        : '堅実な能力でチームの土台を支える優秀な新入生。',
+      { trajectory, meet, power, run, arm, fielding, catching }
+    );
   }
 }

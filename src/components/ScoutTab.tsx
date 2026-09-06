@@ -109,9 +109,10 @@ export const ScoutTab: React.FC = () => {
         const matchSchool = p.highSchool.toLowerCase().includes(q);
         const matchSpecial = p.special.toLowerCase().includes(q);
         const matchYear = p.year.toString().includes(q);
+        const matchGold = details.goldAbilities.some(g => g.toLowerCase().includes(q));
         const matchBlue = details.blueAbilities.some(b => b.toLowerCase().includes(q));
         const matchRed = details.redAbilities.some(r => r.toLowerCase().includes(q));
-        if (!matchName && !matchScoutPref && !matchHSPref && !matchSchool && !matchSpecial && !matchYear && !matchBlue && !matchRed) {
+        if (!matchName && !matchScoutPref && !matchHSPref && !matchSchool && !matchSpecial && !matchYear && !matchGold && !matchBlue && !matchRed) {
           return false;
         }
       }
@@ -119,8 +120,8 @@ export const ScoutTab: React.FC = () => {
       if (!matchRegion(loc.region, selectedRegion)) return false;
       if (selectedPref !== 'すべて' && loc.pref !== selectedPref) return false;
       if (selectedPos !== 'すべて' && p.pos !== selectedPos) return false;
-      if (onlyGold && !p.isGold) return false;
-      if (onlyCatcherB && !(p.catcherGrade === 'A' || p.catcherGrade === 'B')) return false;
+      if (onlyGold && details.goldAbilities.length === 0 && !p.isGold) return false;
+      if (onlyCatcherB && !(p.catcherGrade === 'A' || p.catcherGrade === 'B' || details.goldAbilities.includes('球界の頭脳'))) return false;
       if (onlyOver300 && p.stars < 300) return false;
       if (onlyCrossBorder && !p.isCrossBorder) return false;
       if (onlyNoRed && details.redAbilities.length > 0) return false;
@@ -175,7 +176,7 @@ export const ScoutTab: React.FC = () => {
               <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">全373名収録</span>
             </div>
             <p className="text-xs sm:text-sm text-blue-100 mt-1">
-              1年入学時の<b>初期ステータス</b>および<b>重要青特・注意赤特</b>を併記！スカウト（出身地）とリセマラ（高校所在地）を完全切り替え可能
+              1年入学時の<b>初期ステータス</b>および<b>金特（黄）・重要青特（青）・注意赤特（赤）</b>を併記！金特所持時は下位青特を自動整理
             </p>
           </div>
           
@@ -234,7 +235,7 @@ export const ScoutTab: React.FC = () => {
             ・<b>初回新入生リセマラ（4月ゲーム開始時）</b>：ゲーム開始時に選んだ<b>高校所在地</b>に出現します。例：ダルビッシュ有は「宮城（東北高校）」スタートで出現。
           </p>
           <p className="leading-relaxed">
-            ・<b>越境進学選手（全{crossBorderCount}名）</b>：出身地と高校が異なる選手には「越境進学」バッジが付与されます。
+            ・<b>金特と下位青特のルール</b>：球界の頭脳（金特）所持時はキャッチャーAを省略し、金特は<b>背景黄色</b>にて優先表示しています。
           </p>
         </div>
       )}
@@ -247,7 +248,7 @@ export const ScoutTab: React.FC = () => {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="選手名、高校名、地域、特能（パワヒ、送球E、奪三振など）で検索..."
+              placeholder="選手名、高校名、地域、特能（球界の頭脳、アベヒ、送球E、奪三振など）で検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -365,26 +366,14 @@ export const ScoutTab: React.FC = () => {
           </button>
 
           <button
-            onClick={() => setOnlyCrossBorder(!onlyCrossBorder)}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-full border transition-all ${
-              onlyCrossBorder
-                ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold dark:bg-amber-950 dark:text-amber-200 shadow-sm ring-1 ring-amber-400'
-                : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-700 dark:text-slate-300'
-            }`}
-          >
-            <ArrowRightLeft className="w-3.5 h-3.5 text-amber-600" />
-            越境進学選手のみ ({crossBorderCount})
-          </button>
-
-          <button
             onClick={() => setOnlyGold(!onlyGold)}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-full border transition-all ${
               onlyGold
-                ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold dark:bg-amber-950 dark:text-amber-200'
+                ? 'bg-amber-300 text-amber-950 border-amber-500 font-black shadow-sm ring-1 ring-amber-400'
                 : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-700 dark:text-slate-300'
             }`}
           >
-            <Award className="w-3.5 h-3.5 text-amber-500" /> 金特持ちのみ
+            <Award className="w-3.5 h-3.5 text-amber-600" /> 金特持ちのみ
           </button>
           
           <button
@@ -396,6 +385,18 @@ export const ScoutTab: React.FC = () => {
             }`}
           >
             <Shield className="w-3.5 h-3.5 text-blue-500" /> キャッチャーA/Bのみ
+          </button>
+
+          <button
+            onClick={() => setOnlyCrossBorder(!onlyCrossBorder)}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full border transition-all ${
+              onlyCrossBorder
+                ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold dark:bg-amber-950 dark:text-amber-200 shadow-sm ring-1 ring-amber-400'
+                : 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-700 dark:text-slate-300'
+            }`}
+          >
+            <ArrowRightLeft className="w-3.5 h-3.5 text-amber-600" />
+            越境進学選手 ({crossBorderCount})
           </button>
           
           <button
@@ -421,7 +422,7 @@ export const ScoutTab: React.FC = () => {
           const isSaved = savedIds.includes(player.id);
           const isExpanded = viewDensity === 'detailed' || expandedIds.includes(player.id);
           const details = getPlayerDetails(player);
-          const { initialStats, blueAbilities, redAbilities, advice } = details;
+          const { initialStats, goldAbilities, blueAbilities, redAbilities, advice } = details;
           const isPitcher = player.pos === '投';
           const isDual = player.special === '二刀流' || (initialStats.speed && initialStats.meet);
 
@@ -449,8 +450,8 @@ export const ScoutTab: React.FC = () => {
                             DLC
                           </span>
                         )}
-                        {player.isGold && (
-                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-400 text-amber-950 font-extrabold shrink-0 shadow-sm">
+                        {goldAbilities.length > 0 && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-300 text-amber-950 font-black shrink-0 shadow-sm border border-amber-400">
                             金特
                           </span>
                         )}
@@ -670,8 +671,27 @@ export const ScoutTab: React.FC = () => {
                   )}
                 </div>
 
-                {/* 重要青特 ＆ 注意赤特 併記ブロック */}
-                <div className="space-y-2">
+                {/* 特能ブロック: 金特(黄色) ＆ 青特(青色) ＆ 赤特(赤色) */}
+                <div className="space-y-1.5">
+                  {/* 金特 (背景黄色) */}
+                  {goldAbilities.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1">
+                      <span className="text-[10px] font-black bg-amber-400 text-amber-950 px-1.5 py-0.5 rounded border border-amber-500 shrink-0 flex items-center gap-0.5 shadow-sm">
+                        <Award className="w-2.5 h-2.5" />
+                        <span>金特</span>
+                      </span>
+                      {goldAbilities.map((ab, idx) => (
+                        <span 
+                          key={idx}
+                          className="text-[11px] font-black px-2 py-0.5 rounded-md bg-amber-300 dark:bg-amber-400 text-amber-950 border border-amber-500 dark:border-amber-300 shadow-sm flex items-center gap-1 ring-1 ring-amber-400/40"
+                        >
+                          <span className="text-amber-700 dark:text-amber-900">★</span>
+                          <span>{ab}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   {/* 青特 */}
                   <div className="flex flex-wrap items-center gap-1">
                     <span className="text-[10px] font-black text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-900 shrink-0 flex items-center gap-0.5">
